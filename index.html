@@ -380,7 +380,7 @@ function renderHoro(){
     s2='No slow transit is pressing closely on your chart right now, which makes this a spacious day; let the Moon set the tone.';
     label=mp.name+' Moon in '+SIGNS[moonS];
   }
-  var s3='The '+mp.name+' in '+SIGNS[moonS]+' '+MOONLINE[moonS]+'. '+mp.tip;
+  var s3='The '+mp.name.replace(/ Moon$/,'')+' Moon in '+SIGNS[moonS]+' '+MOONLINE[moonS]+'. '+mp.tip;
   var c=CLOSE[(Math.floor(NOW.getTime()/86400000)+v)%CLOSE.length];
   var s4='Let '+c[0]+' lead: '+c[1]+'.';
   var aff=AFFIRM[planet][(NOW.getDate()+v)%2];
