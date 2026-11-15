@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B1035">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="My Sky">
+<meta name="robots" content="noindex,nofollow">
+<title>My Sky</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B1035'/%3E%3Cpath d='M40 10a23 23 0 1 0 14 34A19 19 0 0 1 40 10z' fill='%23F4C468'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,600&family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1B1035; --bg2:#140B29; --card:#261848; --card2:#2F1F57; --line:rgba(168,150,240,.22);
+  --text:#F3EEFF; --mute:#B9ADD9; --coral:#FF8A5B; --gold:#F4C468; --aqua:#7FD8D0; --lilac:#A896F0; --rose:#E893C4;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif; --sans:'Sora',system-ui,-apple-system,'Segoe UI',sans-serif; --hand:'Caveat','Bradley Hand','Segoe Script',cursive;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.55;font-weight:300;
+  background-image:radial-gradient(ellipse 90% 40% at 50% 0,rgba(168,150,240,.22),transparent 70%),radial-gradient(circle at 12% 18%,rgba(232,147,196,.10),transparent 30%),linear-gradient(var(--bg),var(--bg2));
+  background-attachment:scroll;min-height:100vh}
+main{max-width:560px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(60px + env(safe-area-inset-bottom))}
+h1,h2,h3{font-family:var(--serif);font-style:italic;font-weight:600;margin:0;line-height:1.15}
+h1{font-size:34px;letter-spacing:-.01em}
+.rainbow{background:linear-gradient(90deg,var(--coral),var(--gold),var(--aqua),var(--lilac),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+h2{font-size:23px}
+h3{font-size:18px;font-weight:400}
+p{margin:0 0 10px}
+a{color:var(--aqua)}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,255,255,.12)}
+.mast{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+.mast .sub{color:var(--mute);font-size:13.5px;margin-top:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px 18px;margin:0 0 18px;box-shadow:0 10px 30px rgba(8,3,25,.35)}
+.card>header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.mute{color:var(--mute)} .small{font-size:13px}
+.c-coral{color:var(--coral)} .c-gold{color:var(--gold)} .c-aqua{color:var(--aqua)} .c-lilac{color:var(--lilac)} .c-rose{color:var(--rose)}
+.btn{min-height:44px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card2);font-weight:400;font-size:14px}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--coral);border-color:var(--coral);color:#2a1206;font-weight:600}
+.btn.ghost{background:transparent}
+.btn.icon{width:44px;padding:0;font-size:19px;flex:none}
+.btn.danger{border-color:var(--coral);color:var(--coral)}
+.x{width:40px;height:40px;flex:none;border:0;background:transparent;color:var(--mute);font-size:20px;border-radius:50%}
+.x:active{background:rgba(255,255,255,.1)}
+/* banner */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.cell{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 13px;min-width:0}
+.cell .big{font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.2;margin:5px 0 4px}
+.cell .small{line-height:1.4}
+.glyph{font-family:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols','Noto Sans Symbols 2',sans-serif}
+/* forms */
+form.add{display:flex;gap:8px;margin-top:12px}
+input[type=text],textarea{width:100%;min-width:0;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:11px 13px;font-size:16px;color:var(--text);font-weight:300}
+input[type=text]:focus,textarea:focus{outline:2px solid var(--lilac);outline-offset:1px}
+textarea{min-height:130px;resize:vertical;display:block}
+::placeholder{color:#8f83b3}
+ul.list{list-style:none;margin:0;padding:0}
+ul.list li{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid rgba(168,150,240,.12)}
+ul.list li:last-child{border-bottom:0}
+ul.list .t{flex:1;min-width:0;overflow-wrap:anywhere}
+ul.list .n{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:20px;width:26px;flex:none}
+label.chk{display:flex;align-items:center;gap:12px;flex:1;min-width:0;min-height:44px;cursor:pointer}
+label.chk input{width:24px;height:24px;flex:none;accent-color:var(--aqua);margin:0}
+label.chk span{overflow-wrap:anywhere;min-width:0}
+label.chk input:checked+span{color:var(--mute);text-decoration:line-through}
+.empty{color:var(--mute);font-size:13.5px;padding:6px 0}
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:42px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:300}
+.chip[aria-pressed=true]{background:var(--aqua);border-color:var(--aqua);color:#0d2b2a;font-weight:600}
+.chip.spice[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#33240a}
+.val{padding:9px 16px;border-radius:999px;border:1px solid currentColor;font-family:var(--serif);font-style:italic;font-size:17px;background:rgba(255,255,255,.03)}
+details{border-top:1px solid rgba(168,150,240,.14)}
+details summary{min-height:48px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;list-style:none;font-weight:400}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:'+';font-size:22px;color:var(--mute);width:28px;text-align:center}
+details[open] summary::after{content:'–'}
+details .chips{padding:2px 0 14px}
+.bar{height:12px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:10px 0 6px}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--aqua),var(--gold));transition:width .3s}
+.score{font-family:var(--serif);font-style:italic;font-size:30px}
+/* horoscope */
+.horo p{font-size:15.5px}
+.keyt{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--gold);border:1px solid rgba(244,196,104,.5);border-radius:99px;padding:5px 12px;margin-bottom:12px}
+.affirm{font-family:var(--hand);font-size:29px;line-height:1.15;color:var(--rose);margin:16px 0 14px;font-weight:500}
+.crystal{display:flex;gap:11px;align-items:flex-start;padding:8px 0}
+.crystal .dot{width:16px;height:16px;border-radius:5px;transform:rotate(45deg);flex:none;margin:5px 4px 0 3px;box-shadow:0 0 12px currentColor}
+.crystal b{font-weight:600}
+.word{font-family:var(--serif);font-style:italic;font-size:44px;line-height:1.1;color:var(--gold);margin:2px 0 12px;overflow-wrap:anywhere}
+.asp{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(168,150,240,.12)}
+.asp:last-child{border-bottom:0}
+.asp .g{font-size:19px;width:66px;flex:none;letter-spacing:2px}
+.asp .d{flex:1;min-width:0;font-size:14px}
+.asp .o{font-size:12.5px;color:var(--mute);text-align:right;flex:none}
+/* mood / water */
+.moods{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.mood{aspect-ratio:1;min-height:42px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);font-size:22px;padding:0}
+.mood[aria-pressed=true]{background:var(--lilac);border-color:var(--lilac);transform:scale(1.08)}
+.glasses{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+.glass{aspect-ratio:3/4;min-height:44px;border-radius:6px 6px 12px 12px;border:2px solid var(--aqua);background:transparent;padding:0;font-size:12px;color:var(--mute)}
+.glass[aria-pressed=true]{background:var(--aqua);color:#0d2b2a;font-weight:600}
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+.tab{flex:1;min-height:44px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);font-size:13.5px;padding:6px 4px}
+.tab[aria-selected=true]{background:var(--lilac);border-color:var(--lilac);color:#1b1035;font-weight:600}
+.star{background:var(--card2);border-radius:18px;padding:15px 14px;margin-top:12px}
+.feed-src{padding:11px 0;border-bottom:1px solid rgba(168,150,240,.12)}
+.feed-src:last-child{border-bottom:0}
+.feed-src .name{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:600;font-size:14px}
+.feed-src .name a{font-weight:400;font-size:12.5px;white-space:nowrap}
+a.item{display:block;padding:7px 0;color:var(--text);text-decoration:none;font-size:14.5px}
+a.item span{display:block;color:var(--mute);font-size:12px}
+a.item:active{color:var(--aqua)}
+.game{padding:8px 0;font-size:14.5px}
+table.natal{width:100%;border-collapse:collapse;font-size:14px}
+table.natal td{padding:7px 4px;border-bottom:1px solid rgba(168,150,240,.12)}
+table.natal td:last-child{text-align:right;color:var(--mute)}
+.note{background:rgba(244,196,104,.1);border:1px solid rgba(244,196,104,.4);border-radius:14px;padding:11px 13px;font-size:13.5px;margin-bottom:16px}
+.hide{display:none!important}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+footer{text-align:center;color:var(--mute);font-size:12px;margin-top:26px}
+</style>
+</head>
+<body>
+<main>
+  <div class="mast">
+    <div>
+      <h1 class="rainbow" id="greet">Hello</h1>
+      <div class="sub" id="dateline"></div>
+    </div>
+    <button class="btn icon" data-a="settings" aria-label="Settings" aria-expanded="false" id="setBtn">⚙</button>
+  </div>
+  <div class="note hide" id="storeWarn">Heads up: this browser is blocking saved data (private mode, or the page is embedded in a preview). Open the page directly in Safari or Chrome so your entries are kept.</div>
+
+  <section class="card hide" id="settings"></section>
+  <div class="grid" id="banner"></div>
+  <section class="card horo" id="horo"></section>
+  <section class="card" id="intent"></section>
+  <section class="card" id="sky"></section>
+  <section class="card" id="mood"></section>
+  <section class="card" id="water"></section>
+  <section class="card" id="plants"></section>
+  <section class="card" id="habits"></section>
+  <section class="card" id="tasks"></section>
+  <section class="card" id="grat"></section>
+  <section class="card" id="reflect">
+    <header><h2>Evening reflection</h2><span class="small mute" id="reflSaved"></span></header>
+    <textarea id="reflText" placeholder="What did today teach me? What am I releasing?" aria-label="Evening reflection"></textarea>
+  </section>
+  <section class="card" id="star"></section>
+  <section class="card" id="values"></section>
+  <section class="card" id="forme"></section>
+  <section class="card" id="forus"></section>
+  <section class="card" id="sunday"></section>
+  <section class="card" id="natal"></section>
+  <footer>Made with wonder ✦ everything you enter stays on this device</footer>
+</main>
+
+<script>
+'use strict';
+/* ============ helpers ============ */
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function pad(n){ return n<10?'0'+n:''+n; }
+function dkey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function weekStart(d){ var s=new Date(d.getFullYear(),d.getMonth(),d.getDate()); s.setDate(s.getDate()-s.getDay()); return s; }
+function fmtDay(iso){ var d=new Date(iso); return isNaN(d)?'':d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}); }
+var NOW = new Date(), TODAY = dkey(NOW), WEEK = dkey(weekStart(NOW));
+
+/* ============ storage ============ */
+var KEY='mysky-v1', FKEY='mysky-feed-v1', storageOK=true;
+var DEF={ name:'', place:'Madison, WI', intention:'Wisdom', seed:0, tab:'today',
+  plants:{week:WEEK,items:[]}, days:{},
+  habits:[{id:'h1',t:'Morning movement'},{id:'h2',t:'Meditate or breathe'},{id:'h3',t:'Time outside'},{id:'h4',t:'Read or learn something'},{id:'h5',t:'Screens off by 10'}],
+  gratitude:[], tasks:{today:[],week:[],long:[]}, star:{prio:[],goals:[],dreams:[]}, opened:[] };
+var S;
+function load(){
+  var o=null;
+  try{ localStorage.setItem(KEY+'-t','1'); if(localStorage.getItem(KEY+'-t')!=='1') throw 0; localStorage.removeItem(KEY+'-t'); o=JSON.parse(localStorage.getItem(KEY)||'null'); }
+  catch(e){ storageOK=false; }
+  S=JSON.parse(JSON.stringify(DEF));
+  if(o&&typeof o==='object'){ for(var k in o) S[k]=o[k]; }
+  ['today','week','long'].forEach(function(k){ if(!Array.isArray(S.tasks[k])) S.tasks[k]=[]; });
+  ['prio','goals','dreams'].forEach(function(k){ if(!Array.isArray(S.star[k])) S.star[k]=[]; });
+  if(!S.plants||S.plants.week!==WEEK) S.plants={week:WEEK,items:[]};   // weekly reset, Sunday to Sunday
+  var cut=new Date(NOW); cut.setDate(cut.getDate()-45); var ck=dkey(cut);
+  for(var d in S.days) if(d<ck) delete S.days[d];
+  S.opened=(S.opened||[]).filter(function(x){return x.d>=ck;});
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){ storageOK=false; $('storeWarn').classList.remove('hide'); } }
+function day(){ if(!S.days[TODAY]) S.days[TODAY]={mood:null,water:0,habits:{},reflection:''}; return S.days[TODAY]; }
+
+/* ============ astronomy (low-precision ephemeris, after Paul Schlyter) ============ */
+var R=Math.PI/180;
+function n360(x){ x%=360; return x<0?x+360:x; }
+function sn(x){return Math.sin(x*R);} function cs(x){return Math.cos(x*R);}
+function kepler(M,e){ M=n360(M); var E=M+e/R*sn(M)*(1+e*cs(M)); for(var i=0;i<8;i++){ E=E-(E-e/R*sn(E)-M)/(1-e*cs(E)); } return E; }
+var EL={ // N, i, w, a, e, M : [base, rate per day]
+  Mercury:[[48.3313,3.24587e-5],[7.0047,5e-8],[29.1241,1.01444e-5],[0.387098,0],[0.205635,5.59e-10],[168.6562,4.0923344368]],
+  Venus:[[76.6799,2.4659e-5],[3.3946,2.75e-8],[54.891,1.38374e-5],[0.72333,0],[0.006773,-1.302e-9],[48.0052,1.6021302244]],
+  Mars:[[49.5574,2.11081e-5],[1.8497,-1.78e-8],[286.5016,2.92961e-5],[1.523688,0],[0.093405,2.516e-9],[18.6021,0.5240207766]],
+  Jupiter:[[100.4542,2.76854e-5],[1.303,-1.557e-7],[273.8777,1.64505e-5],[5.20256,0],[0.048498,4.469e-9],[19.895,0.0830853001]],
+  Saturn:[[113.6634,2.3898e-5],[2.4886,-1.081e-7],[339.3939,2.97661e-5],[9.55475,0],[0.055546,-9.499e-9],[316.967,0.0334442282]],
+  Uranus:[[74.0005,1.3978e-5],[0.7733,1.9e-8],[96.6612,3.0565e-5],[19.18171,-1.55e-8],[0.047318,7.45e-9],[142.5905,0.011725806]],
+  Neptune:[[131.7806,3.0173e-5],[1.77,-2.55e-7],[272.8461,-6.027e-6],[30.05826,3.313e-8],[0.008606,2.15e-9],[260.2471,0.005995147]]
+};
+function positions(date){
+  var d=date.getTime()/86400000-10956, out={};
+  // Sun
+  var ws=282.9404+4.70935e-5*d, es=0.016709-1.151e-9*d, Ms=n360(356.047+0.9856002585*d);
+  var E=kepler(Ms,es), xv=cs(E)-es, yv=Math.sqrt(1-es*es)*sn(E);
+  var rs=Math.sqrt(xv*xv+yv*yv), ls=n360(Math.atan2(yv,xv)/R+ws);
+  out.Sun=ls; var xs=rs*cs(ls), ys=rs*sn(ls);
+  // Moon
+  var Nm=125.1228-0.0529538083*d, wm=318.0634+0.1643573223*d, Mm=n360(115.3654+13.0649929509*d), em=0.0549, im=5.1454;
+  E=kepler(Mm,em); xv=60.2666*(cs(E)-em); yv=60.2666*Math.sqrt(1-em*em)*sn(E);
+  var v=Math.atan2(yv,xv)/R, r=Math.sqrt(xv*xv+yv*yv);
+  var xh=r*(cs(Nm)*cs(v+wm)-sn(Nm)*sn(v+wm)*cs(im)), yh=r*(sn(Nm)*cs(v+wm)+cs(Nm)*sn(v+wm)*cs(im));
+  var lm=Math.atan2(yh,xh)/R, Ls=Ms+ws, Lm=Mm+wm+Nm, D=Lm-Ls, F=Lm-Nm;
+  lm+= -1.274*sn(Mm-2*D)+0.658*sn(2*D)-0.186*sn(Ms)-0.059*sn(2*Mm-2*D)-0.057*sn(Mm-2*D+Ms)+0.053*sn(Mm+2*D)
+       +0.046*sn(2*D-Ms)+0.041*sn(Mm-Ms)-0.035*sn(D)-0.031*sn(Mm+Ms)-0.015*sn(2*F-2*D)+0.011*sn(Mm-4*D);
+  out.Moon=n360(lm);
+  // planets
+  var Mj=n360(19.895+0.0830853001*d), Msa=n360(316.967+0.0334442282*d), Mu=n360(142.5905+0.011725806*d);
+  for(var p in EL){
+    var q=EL[p].map(function(a){return a[0]+a[1]*d;}), N=q[0], i=q[1], w=q[2], a=q[3], e=q[4], M=q[5];
+    E=kepler(M,e); xv=a*(cs(E)-e); yv=a*Math.sqrt(1-e*e)*sn(E); v=Math.atan2(yv,xv)/R; r=Math.sqrt(xv*xv+yv*yv);
+    xh=r*(cs(N)*cs(v+w)-sn(N)*sn(v+w)*cs(i)); yh=r*(sn(N)*cs(v+w)+cs(N)*sn(v+w)*cs(i));
+    var zh=r*sn(v+w)*sn(i), lon=Math.atan2(yh,xh)/R, lat=Math.atan2(zh,Math.sqrt(xh*xh+yh*yh))/R, pert=0;
+    if(p==='Jupiter') pert=-0.332*sn(2*Mj-5*Msa-67.6)-0.056*sn(2*Mj-2*Msa+21)+0.042*sn(3*Mj-5*Msa+21)-0.036*sn(Mj-2*Msa)+0.022*cs(Mj-Msa)+0.023*sn(2*Mj-3*Msa+52)-0.016*sn(Mj-5*Msa-69);
+    if(p==='Saturn') pert=0.812*sn(2*Mj-5*Msa-67.6)-0.229*cs(2*Mj-4*Msa-2)+0.119*sn(Mj-2*Msa-3)+0.046*sn(2*Mj-6*Msa-69)+0.014*sn(Mj-3*Msa+32);
+    if(p==='Uranus') pert=0.04*sn(Msa-2*Mu+6)+0.035*sn(Msa-3*Mu+33)-0.015*sn(Mj-Mu+20);
+    if(pert){ lon+=pert; xh=r*cs(lon)*cs(lat); yh=r*sn(lon)*cs(lat); }
+    out[p]=n360(Math.atan2(yh+ys,xh+xs)/R);
+  }
+  // Pluto
+  var Sp=50.03+0.033459652*d, P=238.95+0.003968789*d;
+  var lp=238.9508+0.00400703*d-19.799*sn(P)+19.848*cs(P)+0.897*sn(2*P)-4.956*cs(2*P)+0.61*sn(3*P)+1.211*cs(3*P)-0.341*sn(4*P)-0.19*cs(4*P)+0.128*sn(5*P)-0.034*cs(5*P)-0.038*sn(6*P)+0.031*cs(6*P)+0.02*sn(Sp-P)-0.01*cs(Sp-P);
+  var bp=-3.9082-5.453*sn(P)-14.975*cs(P)+3.527*sn(2*P)+1.673*cs(2*P)-1.051*sn(3*P)+0.328*cs(3*P)+0.179*sn(4*P)-0.292*cs(4*P)+0.019*sn(5*P)+0.1*cs(5*P)-0.031*sn(6*P)-0.026*cs(6*P)+0.011*cs(Sp-P);
+  var rp=40.72+6.68*sn(P)+6.9*cs(P)-1.18*sn(2*P)-0.03*cs(2*P)+0.15*sn(3*P)-0.14*cs(3*P);
+  out.Pluto=n360(Math.atan2(rp*sn(lp)*cs(bp)+ys, rp*cs(lp)*cs(bp)+xs)/R);
+  return out;
+}
+var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+var SG=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'].map(function(g){return g+'︎';});
+var ELEM=['fire','earth','air','water'];
+var PG={Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀︎',Mars:'♂︎',Jupiter:'♃',Saturn:'♄',Uranus:'♅',Neptune:'♆',Pluto:'♇',Asc:'AC',MC:'MC',Node:'☊'};
+function sgn(l){ return Math.floor(n360(l)/30); }
+function fdeg(l){ l=n360(l); var m=Math.round((l%30)*60); if(m>=1800) m=1799; return Math.floor(m/60)+'°'+pad(m%60)+'′'; }
+function pos(l){ return SIGNS[sgn(l)]+' '+fdeg(l); }
+function sep(a,b){ var d=Math.abs(n360(a)-n360(b)); return d>180?360-d:d; }
+function forb(o){ var m=Math.round(o*60); return Math.floor(m/60)+'°'+pad(m%60)+'′'; }
+
+var NATAL={Sun:257.617,Moon:25.417,Asc:118.95,MC:11.717,Mercury:248.183,Venus:219.8,Mars:267.967,Jupiter:128.717,Saturn:163.733,Uranus:228.567,Neptune:258.017,Pluto:198.683,Node:172.95};
+var NNAME={Sun:'Sun',Moon:'Moon',Asc:'Rising',MC:'Midheaven',Mercury:'Mercury',Venus:'Venus',Mars:'Mars',Jupiter:'Jupiter',Saturn:'Saturn',Uranus:'Uranus',Neptune:'Neptune',Pluto:'Pluto',Node:'North Node'};
+var ASPECTS=[{n:'conjunct',a:0,g:'☌',soft:1},{n:'sextile',a:60,g:'⚹',soft:1},{n:'square',a:90,g:'□',soft:0},{n:'trine',a:120,g:'△',soft:1},{n:'opposite',a:180,g:'☍',soft:0}];
+var SKY, SKY2, RETRO={}, TRANSITS=[];
+function computeSky(){
+  SKY=positions(NOW); SKY2=positions(new Date(NOW.getTime()+6*3600000));
+  var mh=positions(new Date(NOW.getTime()+3600000));
+  TRANSITS=[];
+  for(var t in SKY){
+    var dl=n360(SKY2[t]-SKY[t]+180)-180; RETRO[t]=dl<0 && t!=='Sun' && t!=='Moon';
+    for(var n in NATAL){
+      var s=sep(SKY[t],NATAL[n]);
+      ASPECTS.forEach(function(A){
+        var orb=Math.abs(s-A.a), max=(t==='Moon')?2.5:(t==='Sun'?3:3.5);
+        if(orb<=max){
+          var later=Math.abs(sep(t==='Moon'?mh[t]:SKY2[t],NATAL[n])-A.a);
+          TRANSITS.push({t:t,n:n,A:A,orb:orb,app:later<orb});
+        }
+      });
+    }
+  }
+  TRANSITS.sort(function(a,b){return a.orb-b.orb;});
+}
+function moonPhase(){
+  var e=n360(SKY.Moon-SKY.Sun), i=Math.floor(n360(e+22.5)/45);
+  return { elong:e, illum:Math.round((1-cs(e))/2*100),
+    name:['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'][i],
+    icon:['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'][i],
+    tip:['Plant a seed. Name what you want in a whisper.','Take the first small, brave step.','Friction is fuel — choose and commit.','Refine, adjust, keep faith.','Everything is lit up. Celebrate, and notice what is revealed.','Share what you have learned. Give thanks.','Release what did not hold. Make room.','Rest and dream. Let the cycle compost.'][i] };
+}
+function signRel(a,b){ // relationship of sign a to sign b
+  var d=((a-b)%12+12)%12;
+  return ['in the same sign as','one sign past','sextile','square','trine','quincunx to','opposite','quincunx to','trine','square','sextile','one sign behind'][d];
+}
+
+/* ============ content libraries ============ */
+var HOUSE=['self and presence','resources and self-worth','learning and conversation','home and roots','creativity, play and joy','daily rituals and wellbeing','partnership','intimacy and transformation','adventure and meaning','calling and visibility','community and hopes','rest, dreams and the unseen'];
+function ord(n){ return n+(['th','st','nd','rd'][(n%100>10&&n%100<14)?0:n%10]||'th'); }
+var TDESC={Sun:'the Sun\'s spotlight',Moon:'the Moon\'s feeling-tide',Mercury:'Mercury, the messenger',Venus:'Venus, planet of love and beauty',Mars:'Mars, your spark of drive',Jupiter:'Jupiter, the great expander',Saturn:'Saturn, the patient teacher',Uranus:'Uranus, the awakener',Neptune:'Neptune, the dreamer',Pluto:'Pluto, the transformer'};
+var NDESC={Sun:'your Sagittarius Sun — your core fire, forever fused with Neptune\'s dreaminess',Moon:'your Aries Moon — your quick, brave heart',Asc:'your Cancer Rising — the tender way you meet the world',MC:'your Aries Midheaven — your calling and public path',Mercury:'your Sagittarius Mercury — your big-picture, truth-seeking mind',Venus:'your Scorpio Venus — how deeply and loyally you love',Mars:'your Sagittarius Mars — your adventurous drive',Jupiter:'your Leo Jupiter — your generous, creative luck',Saturn:'your Virgo Saturn — your craft and quiet discipline',Uranus:'your Scorpio Uranus — your inner rebel',Neptune:'your Sagittarius Neptune — your spiritual compass',Pluto:'your Libra Pluto — your power in relationship',Node:'your Virgo North Node — your growth edge of devoted, grounded service'};
+var VERB={conjunct:['lands directly on','merges with'],sextile:['opens an easy door to','offers a friendly hand to'],square:['presses on','rubs against'],trine:['flows effortlessly into','pours support into'],opposite:['stands across from','holds up a mirror to']};
+var ADVICE={ // [soft, hard]
+  Sun:['Let yourself be seen doing what you love; visibility is medicine today.','If your ego and your needs tug in different directions, pause and choose the one that feels like integrity.'],
+  Mercury:['Words come easily — write the message, have the conversation, sketch the idea.','Slow your replies and double-check details; a misread is likelier than a real disagreement.'],
+  Venus:['Say yes to beauty, color and affection; receiving is as generous as giving.','Notice where you over-give or under-ask, and let kindness include you.'],
+  Mars:['You have real momentum — point it at the thing that takes courage.','Move your body before you move your mouth; channel the heat into action, not argument.'],
+  Jupiter:['Luck favors a wide-open yes right now; think bigger than is strictly comfortable.','Enthusiasm can outrun capacity — grow, but keep one foot on the ground.'],
+  Saturn:['Steady effort pays off now; small disciplined steps become something lasting.','A limit or responsibility is asking for maturity, not self-criticism. Do the one real thing.'],
+  Uranus:['A fresh idea or happy accident wants in — follow the spark of freedom.','Restlessness is information. Change one small thing instead of everything at once.'],
+  Neptune:['Intuition is unusually clear; trust the image, the song, the dream that keeps returning.','Things may feel foggy — don\'t force certainty. Rest, create, and let the facts surface.'],
+  Pluto:['Quiet power is available; you can release an old pattern without drama.','Something deep is being reworked. Be honest about what you are ready to outgrow.']};
+var MOONLINE=['kindles your own natal Moon\'s fire — feel it and move it','asks for slow, sensory comfort: good food, soft textures, bare feet','wants conversation, curiosity and a change of scene','is home turf for your Cancer Rising, so let yourself be nurtured','calls for play, warmth and a little applause','favors tidying, tending and small acts of care — nourishing for your Virgo North Node','seeks harmony and beauty — a natural day to turn toward Matt, your Libra','runs deep and private, speaking the same language as your Scorpio Venus','is in your own Sun sign — optimism and wanderlust feel like home','steadies you; make one plan and honor it','wants freedom, friends and a fresh perspective','softens every edge; music, water and dreams are doorways'];
+var CLOSE=[['wonder','step outside and look up for sixty unhurried seconds'],['creativity','make one small beautiful thing with color'],['kindness','send one sentence of appreciation to someone'],['courage','say the true thing gently'],['freedom','leave one hour today completely unplanned'],['connection','ask a question and really listen to the answer'],['growth','try the thing you are not yet good at'],['beauty','put on the music that opens your chest'],['integrity','keep one promise to yourself before noon'],['justice','give your attention to one thing that makes it fairer for someone']];
+var AFFIRM={Sun:['I let my light be seen, exactly as it is.','My joy is a compass, and I follow it.'],Moon:['My feelings are wise messengers.','I move with my own tides.'],Mercury:['My words carry truth and kindness.','I trust my mind to find the meaning.'],Venus:['I am worthy of the beauty I create.','Love flows to me as easily as I give it.'],Mars:['My courage is bigger than my fear.','I move toward what sets me free.'],Jupiter:['I say yes to my own expansion.','There is more than enough wonder for me.'],Saturn:['I build my dreams one honest step at a time.','I am patient with what matters.'],Uranus:['I am free to change and surprise myself.','The unexpected is on my side.'],Neptune:['I trust what I cannot yet see.','My intuition is a clear, quiet river.'],Pluto:['I release what I have outgrown.','I am becoming more myself every day.']};
+var CR={ // name: [color, quality]
+  'Amethyst':['#B58CF0','quiets mental chatter and opens intuition'],'Lapis Lazuli':['#5B7BE8','the stone of truth-seekers and inner knowing'],'Clear Quartz':['#EDEBFA','amplifies whatever you intend'],'Rose Quartz':['#F2A7C3','softens the heart toward yourself and others'],'Citrine':['#F4C468','sunlight in stone — confidence and warmth'],'Carnelian':['#FF8A5B','stokes courage, vitality and creative fire'],'Moonstone':['#DDE6F5','attunes you to cycles and feeling'],'Selenite':['#F5F2FF','clears the air and brings calm clarity'],'Labradorite':['#7FD8D0','protects your energy through change and awakens magic'],'Black Tourmaline':['#6B6480','grounds and shields when things feel heavy'],'Smoky Quartz':['#A08C7A','helps you release tension and stay rooted'],'Fluorite':['#9BE0B8','brings focus and order to a busy mind'],'Sodalite':['#6F8DF0','links logic with intuition; calm, honest thinking'],'Aquamarine':['#9ADFE8','cools, soothes and helps you speak clearly'],'Tiger\'s Eye':['#D9A050','steady confidence and grounded bravery'],'Green Aventurine':['#7FD89A','optimism, luck and an open heart for new beginnings'],'Rhodonite':['#E8839B','compassion in action; heals through forgiveness'],'Sunstone':['#FFA86B','joy, freedom and permission to shine'],'Malachite':['#3FBF8A','a stone of deep change and honest growth'],'Moss Agate':['#8FCF8A','nature\'s patience — slow, steady flourishing'],'Blue Lace Agate':['#B5D4F5','gentle, graceful communication'],'Obsidian':['#55506A','shows the truth and cuts what no longer serves'],'Red Jasper':['#D9654F','stamina and steady, embodied strength'],'Lepidolite':['#C9A6E8','eases worry and invites deep rest'],'Celestite':['#BFE3F7','peaceful, angelic calm and a sense of wonder'],'Pyrite':['#E3C76B','abundance, willpower and a spark of action']};
+var PCRYS={Sun:['Citrine','Sunstone'],Moon:['Moonstone','Selenite'],Mercury:['Blue Lace Agate','Fluorite'],Venus:['Rose Quartz','Rhodonite'],Mars:['Carnelian','Red Jasper'],Jupiter:['Lapis Lazuli','Green Aventurine'],Saturn:['Smoky Quartz','Black Tourmaline'],Uranus:['Labradorite','Aquamarine'],Neptune:['Amethyst','Celestite'],Pluto:['Obsidian','Malachite']};
+var ECRYS={fire:'Carnelian',earth:'Moss Agate',air:'Clear Quartz',water:'Moonstone'};
+var INTENT={Wisdom:['Lapis Lazuli','Amethyst','Sodalite'],Courage:['Carnelian','Tiger\'s Eye','Red Jasper'],Peace:['Celestite','Lepidolite','Selenite'],Joy:['Sunstone','Citrine','Green Aventurine'],Love:['Rose Quartz','Rhodonite','Moonstone'],Clarity:['Clear Quartz','Fluorite','Selenite'],Trust:['Labradorite','Moonstone','Amethyst'],Freedom:['Sunstone','Labradorite','Aquamarine'],Wonder:['Labradorite','Celestite','Moonstone'],Growth:['Moss Agate','Malachite','Green Aventurine'],Creativity:['Carnelian','Citrine','Labradorite'],Rest:['Lepidolite','Smoky Quartz','Selenite'],Abundance:['Pyrite','Citrine','Green Aventurine'],Balance:['Fluorite','Smoky Quartz','Moonstone'],Presence:['Smoky Quartz','Clear Quartz','Moss Agate'],Healing:['Rhodonite','Malachite','Rose Quartz']};
+var WISDOM_WHY={'Lapis Lazuli':'the classic stone of wisdom and truth — fitting for a Sagittarius Sun and Mercury that live to understand','Amethyst':'stills the mind so inner knowing can be heard; honors your Sun–Neptune intuition','Sodalite':'joins logic with intuition, so what you know becomes what you can say'};
+var VALUES=['Integrity','Creativity','Justice','Kindness','Growth','Wonder','Freedom','Connection','Courage','Beauty'];
+var ACC=['coral','gold','aqua','lilac','rose'];
+var MOODS=[['😄','Joyful'],['🙂','Content'],['😌','Calm'],['😐','Neutral'],['😔','Low'],['😰','Anxious'],['😤','Frustrated']];
+var PLANTS=[
+ ['Vegetables',1,['Spinach','Kale','Arugula','Romaine','Broccoli','Cauliflower','Carrot','Bell pepper','Tomato','Cucumber','Zucchini','Sweet potato','Potato','Onion','Garlic','Mushrooms','Celery','Beet','Cabbage','Brussels sprouts','Green beans','Peas','Corn','Asparagus','Squash','Avocado']],
+ ['Fruit',1,['Apple','Banana','Blueberries','Strawberries','Raspberries','Orange','Lemon','Lime','Grapes','Pear','Peach','Mango','Pineapple','Cherries','Kiwi','Dates','Cranberries','Pomegranate']],
+ ['Grains',1,['Oats','Brown rice','Quinoa','Whole wheat','Barley','Farro','Popcorn','Buckwheat','Wild rice']],
+ ['Beans & legumes',1,['Black beans','Chickpeas','Lentils','Kidney beans','Pinto beans','White beans','Edamame','Tofu','Peanuts']],
+ ['Nuts & seeds',1,['Almonds','Walnuts','Cashews','Pecans','Pistachios','Chia','Flax','Hemp seeds','Pumpkin seeds','Sunflower seeds','Sesame']],
+ ['Other plants',1,['Coffee','Tea','Dark chocolate','Olives']],
+ ['Herbs & spices (¼ each)',0.25,['Basil','Cilantro','Parsley','Mint','Rosemary','Thyme','Oregano','Dill','Sage','Ginger','Turmeric','Cinnamon','Cumin','Paprika','Black pepper','Chili','Cardamom','Nutmeg','Coriander','Vanilla']]
+];
+var PVAL={}; PLANTS.forEach(function(g){ g[2].forEach(function(p){ PVAL[p]=g[1]; }); });
+var STARTERS=['His Venus trines your Moon almost exactly: ask Matt, “What is one small thing I do that makes you feel most at home?”','“If we had a completely free Saturday and no chores existed, what would we do?”','“What is something you have been quietly proud of lately that I might have missed?”','His Libra Sun sextiles your Sagittarius Mercury — you two talk well. Try: “What idea has been stuck in your head this week?”','“What is one thing we used to do together that you would like to bring back?”','“Which game this season will we remember, and where should we watch the next one?”','His Venus trines your Mars: “What adventure, big or tiny, should we put on the calendar?”','“What felt heavy for you this week, and what would lighten it?”'];
+var VIBE={
+  Sag:['Your arrow wants a target — pick one horizon and aim.','Curiosity is your superpower today; follow the tangent.','Honesty lands best wrapped in warmth.','Restless? Take the long way home.','Your optimism is contagious; spread it on purpose.','Teach something, learn something — both feed you.','Say yes to the unplanned detour.'],
+  Lib:['Matt\'s scales want ease today; a calm room goes a long way.','He is in diplomat mode — a good day to decide something together.','Beauty recharges him; music or a tidy corner helps.','His Sun square Moon can pull him between harmony and his own needs — ask what he wants.','He shines when he is appreciated out loud.','Partnership energy is high; do one ordinary thing side by side.','He may be weighing a choice; listening beats advising.']};
+var SYN=['His Venus trine your Moon (near-exact) — your strongest bond. His way of loving is exactly what your Aries heart finds soothing; affection between you is meant to be easy.','His Libra Sun sextile your Sagittarius Mercury — he steadies your ideas and you widen his. Talk things through out loud together.','His Venus trine your Mars — attraction and shared adventure. Doing something active together refills you both.'];
+
+/* ============ render: masthead + banner ============ */
+function renderMast(){
+  var h=NOW.getHours(), g=h<5?'Good night':h<12?'Good morning':h<17?'Good afternoon':h<21?'Good evening':'Good night';
+  $('greet').textContent=g+(S.name?', '+S.name:'');
+  $('dateline').textContent=NOW.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'})+' · '+S.place;
+}
+var WX=null;
+function renderBanner(){
+  var mp=moonPhase(), sunS=sgn(SKY.Sun), moonS=sgn(SKY.Moon);
+  var toRet=n360(NATAL.Sun-SKY.Sun), days=Math.round(toRet/0.9856);
+  var sunNote= sep(SKY.Sun,NATAL.Sun)<1.5 ? 'Happy solar return ✦' : (days<=183? days+' days to your solar return' : (365-days)+' days since your solar return');
+  var wx = WX ? '<div class="big">'+WX.icon+' '+WX.temp+'°F</div><div class="small mute">'+esc(WX.text)+' · H '+WX.hi+'° L '+WX.lo+'°</div>'
+              : '<div class="big">—</div><div class="small mute">'+(WX===false?'Weather unavailable right now':'Loading…')+'</div>';
+  $('banner').innerHTML=
+   '<div class="cell"><div class="eyebrow c-gold">Sun today</div><div class="big"><span class="glyph">'+SG[sunS]+'</span> '+pos(SKY.Sun)+'</div><div class="small mute">Natal Sun Sagittarius 17°37′<br>'+sunNote+'</div></div>'+
+   '<div class="cell"><div class="eyebrow c-lilac">Moon</div><div class="big">'+mp.icon+' '+SIGNS[moonS]+' '+fdeg(SKY.Moon)+'</div><div class="small mute">'+mp.name+' · '+mp.illum+'% lit<br>'+signRel(moonS,3).replace(/^./,function(c){return c.toUpperCase();})+' your Cancer Rising</div></div>'+
+   '<div class="cell"><div class="eyebrow c-aqua">Weather</div>'+wx+'</div>'+
+   '<div class="cell"><div class="eyebrow c-rose">Natal</div><div class="big"><span class="glyph">'+SG[3]+'</span> Cancer Rising</div><div class="small mute">Rising 28°57′ Cancer<br>Moon 25°25′ Aries <span class="glyph">'+SG[0]+'</span></div></div>';
+}
+
+/* ============ horoscope ============ */
+function crystalHTML(name,why){ var c=CR[name]; return '<div class="crystal"><span class="dot" style="background:'+c[0]+';color:'+c[0]+'"></span><div><b>'+esc(name)+'</b> — <span class="mute">'+esc(why||c[1])+'</span></div></div>'; }
+function keyTransit(){
+  var slow=TRANSITS.filter(function(x){return x.t!=='Moon';}).slice(0,5);
+  if(!slow.length) return null;
+  return slow[S.seed%slow.length];
+}
+function renderHoro(){
+  var k=keyTransit(), mp=moonPhase(), sunS=sgn(SKY.Sun), moonS=sgn(SKY.Moon), v=S.seed;
+  var house=((sunS-3)%12+12)%12;
+  var s1= sunS===8 ? 'The Sun is home in Sagittarius at '+fdeg(SKY.Sun)+' — this is your season, and it lights your whole-sign '+ord(house+1)+' house of '+HOUSE[house]+'.'
+        : 'The Sun at '+pos(SKY.Sun)+' is '+signRel(sunS,8)+' your Sagittarius Sun, lighting your whole-sign '+ord(house+1)+' house of '+HOUSE[house]+'.';
+  var s2, label, planet;
+  if(k){
+    planet=k.t;
+    var adv=ADVICE[k.t]?ADVICE[k.t][(k.A.soft&&!(k.A.n==='conjunct'&&/Saturn|Pluto|Mars/.test(k.t)))?0:1]:'';
+    s2=(TDESC[k.t].replace(/^./,function(c){return c.toUpperCase();}))+(RETRO[k.t]?' (retrograde)':'')+' at '+pos(SKY[k.t])+' '+VERB[k.A.n][v%2]+' '+NDESC[k.n]+', '+(k.app?'building toward exact':'just past exact')+' at '+forb(k.orb)+'. '+adv;
+    label='<span class="glyph">'+PG[k.t]+' '+k.A.g+' '+PG[k.n]+'</span> &nbsp;'+k.t+' '+k.A.n+' natal '+NNAME[k.n]+' · '+forb(k.orb);
+  } else {
+    planet='Moon';
+    s2='No slow transit is pressing closely on your chart right now, which makes this a spacious day; let the Moon set the tone.';
+    label=mp.name+' Moon in '+SIGNS[moonS];
+  }
+  var s3='The '+mp.name+' in '+SIGNS[moonS]+' '+MOONLINE[moonS]+'. '+mp.tip;
+  var c=CLOSE[(Math.floor(NOW.getTime()/86400000)+v)%CLOSE.length];
+  var s4='Let '+c[0]+' lead: '+c[1]+'.';
+  var aff=AFFIRM[planet][(NOW.getDate()+v)%2];
+  var names=PCRYS[planet].slice(), e=ECRYS[ELEM[moonS%4]];
+  if(names.indexOf(e)<0) names.push(e);
+  var whyP='for '+planet+' — ', whyM='for the '+SIGNS[moonS]+' Moon — ';
+  $('horo').innerHTML='<header><h2>Today\'s horoscope</h2><button class="btn" data-a="regen">↻ Another</button></header>'+
+    '<div class="keyt">KEY TRANSIT · '+label+'</div>'+
+    '<p>'+esc(s1)+'</p><p>'+esc(s2)+'</p><p>'+esc(s3)+'</p><p>'+esc(s4)+'</p>'+
+    '<div class="affirm">“'+esc(aff)+'”</div>'+
+    '<div class="eyebrow">Crystals for today</div>'+
+    names.map(function(n,i){ return crystalHTML(n,(n===e&&i===names.length-1?whyM:whyP)+CR[n][1]); }).join('');
+}
+
+/* ============ intention ============ */
+var intentOpen=false;
+function intentCrystals(w){
+  var key=Object.keys(INTENT).filter(function(k){return k.toLowerCase()===w.toLowerCase();})[0];
+  if(key) return INTENT[key];
+  var names=Object.keys(CR), h=0, out=[]; for(var i=0;i<w.length;i++) h=(h*31+w.charCodeAt(i))>>>0;
+  while(out.length<3){ var n=names[h%names.length]; if(out.indexOf(n)<0) out.push(n); h=h*7+3; }
+  return out;
+}
+function renderIntent(){
+  var w=S.intention||'Wisdom', cs3=intentCrystals(w);
+  $('intent').innerHTML='<header><h2>Present intention</h2><button class="btn" data-a="intent-toggle">'+(intentOpen?'Done':'Change')+'</button></header>'+
+    '<div class="word">'+esc(w)+'</div>'+
+    (intentOpen?'<div class="chips" style="margin-bottom:6px">'+Object.keys(INTENT).map(function(k){return '<button class="chip" data-a="intent-set" data-v="'+k+'" aria-pressed="'+(k.toLowerCase()===w.toLowerCase())+'">'+k+'</button>';}).join('')+'</div>'+
+      '<form class="add" data-f="intent"><input type="text" name="t" maxlength="24" placeholder="or type your own word" autocomplete="off" aria-label="Your own intention word"><button class="btn primary" type="submit">Set</button></form><div style="height:14px"></div>':'')+
+    '<div class="eyebrow">Crystals for '+esc(w)+'</div>'+
+    cs3.map(function(n){ return crystalHTML(n, w.toLowerCase()==='wisdom'?WISDOM_WHY[n]:null); }).join('');
+}
+
+/* ============ current sky ============ */
+function renderSky(){
+  var mp=moonPhase(), rows=TRANSITS.slice(0,8).map(function(x){
+    return '<div class="asp"><span class="g glyph c-'+(x.A.soft?'aqua':'coral')+'">'+PG[x.t]+x.A.g+PG[x.n]+'</span><span class="d">'+x.t+(RETRO[x.t]?' ℞':'')+' '+x.A.n+' your '+NNAME[x.n]+'<br><span class="mute small">'+pos(SKY[x.t])+' → natal '+pos(NATAL[x.n])+'</span></span><span class="o">'+forb(x.orb)+'<br>'+(x.t==='Moon'?'passing':(x.app?'applying':'separating'))+'</span></div>';
+  }).join('');
+  var where=['Sun','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'].map(function(p){return '<span style="white-space:nowrap"><span class="glyph">'+PG[p]+'</span> '+SIGNS[sgn(SKY[p])]+' '+Math.floor(SKY[p]%30)+'°'+(RETRO[p]?' ℞':'')+'</span>';}).join(' · ');
+  $('sky').innerHTML='<header><h2>Current sky</h2><span style="font-size:30px">'+mp.icon+'</span></header>'+
+    '<p><b style="font-weight:600">'+mp.name+'</b> in '+pos(SKY.Moon)+' · '+mp.illum+'% illuminated<br><span class="mute">'+mp.tip+'</span></p>'+
+    '<div class="eyebrow" style="margin-top:14px">Tightest transits to your chart</div>'+(rows||'<div class="empty">No close aspects at the moment — open sky.</div>')+
+    '<div class="eyebrow" style="margin-top:14px">Where everything is</div><p class="small mute" style="margin-top:6px;line-height:1.9">'+where+'</p>';
+}
+
+/* ============ mood, water ============ */
+function renderMood(){
+  var d=day();
+  $('mood').innerHTML='<header><h2>How am I?</h2><span class="small mute">'+(d.mood!=null?MOODS[d.mood][1]:'tap one')+'</span></header><div class="moods">'+
+    MOODS.map(function(m,i){return '<button class="mood" data-a="mood" data-i="'+i+'" aria-label="'+m[1]+'" aria-pressed="'+(d.mood===i)+'">'+m[0]+'</button>';}).join('')+'</div>';
+}
+function renderWater(){
+  var d=day(), h='';
+  for(var i=0;i<8;i++) h+='<button class="glass" data-a="water" data-i="'+i+'" aria-label="Glass '+(i+1)+'" aria-pressed="'+(i<d.water)+'">'+(i+1)+'</button>';
+  $('water').innerHTML='<header><h2>Hydration</h2><span class="small mute">'+d.water+' of 8 glasses'+(d.water>=8?' ✦':'')+'</span></header><div class="glasses">'+h+'</div>';
+}
+
+/* ============ plants ============ */
+function plantScore(){ return S.plants.items.reduce(function(a,p){return a+(PVAL[p]||1);},0); }
+function renderPlantTop(){
+  var sc=plantScore(), items=S.plants.items, end=weekStart(NOW); end.setDate(end.getDate()+7);
+  $('plantTop').innerHTML='<div class="row" style="justify-content:space-between;align-items:baseline"><div><span class="score c-aqua">'+(Math.round(sc*100)/100)+'</span> <span class="mute">/ 20 plant points</span></div><span class="small mute">resets '+end.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+'</span></div>'+
+    '<div class="bar"><i style="width:'+Math.min(100,sc/20*100)+'%"></i></div>'+
+    '<p class="small mute">'+(sc>=20?'Goal reached — your microbiome is throwing a party ✦':items.length?items.length+' logged this week: '+items.map(esc).join(', '):'Tap anything you have eaten this week. Tap again to undo.')+'</p>';
+}
+function renderPlants(){
+  var has={}; S.plants.items.forEach(function(p){has[p]=1;});
+  $('plants').innerHTML='<header><h2>Plant diversity</h2><span class="small mute">this week</span></header><div id="plantTop"></div>'+
+    PLANTS.map(function(g,gi){
+      return '<details'+(gi===0?' open':'')+'><summary>'+g[0]+'</summary><div class="chips">'+g[2].map(function(p){return '<button class="chip'+(g[1]<1?' spice':'')+'" data-a="plant" data-v="'+esc(p)+'" aria-pressed="'+(!!has[p])+'">'+esc(p)+'</button>';}).join('')+'</div></details>';
+    }).join('');
+  renderPlantTop();
+}
+
+/* ============ habits ============ */
+var habitEdit=false;
+function renderHabits(){
+  var d=day(), done=S.habits.filter(function(h){return d.habits[h.id];}).length;
+  $('habits').innerHTML='<header><h2>Habits</h2><div class="row"><span class="small mute">'+done+'/'+S.habits.length+'</span><button class="btn" data-a="habit-edit">'+(habitEdit?'Done':'Edit')+'</button></div></header>'+
+    '<ul class="list">'+(S.habits.map(function(h){
+      return '<li><label class="chk"><input type="checkbox" data-c="habit" data-id="'+h.id+'"'+(d.habits[h.id]?' checked':'')+'><span>'+esc(h.t)+'</span></label>'+(habitEdit?'<button class="x" data-a="habit-del" data-id="'+h.id+'" aria-label="Delete habit">×</button>':'')+'</li>';
+    }).join('')||'<li class="empty">No habits yet — tap Edit to add one.</li>')+'</ul>'+
+    (habitEdit?'<form class="add" data-f="habit"><input type="text" name="t" maxlength="60" placeholder="New habit" autocomplete="off" aria-label="New habit"><button class="btn primary" type="submit">Add</button></form>':'');
+}
+
+/* ============ tasks ============ */
+var TABS=[['today','Today'],['week','This Week'],['long','Long-Term']];
+function renderTasks(){
+  var list=S.tasks[S.tab]||[];
+  $('tasks').innerHTML='<header><h2>Tasks</h2><span class="small mute">'+list.filter(function(t){return !t.done;}).length+' open</span></header>'+
+    '<div class="tabs" role="tablist">'+TABS.map(function(t){return '<button class="tab" role="tab" data-a="tab" data-v="'+t[0]+'" aria-selected="'+(S.tab===t[0])+'">'+t[1]+'</button>';}).join('')+'</div>'+
+    '<ul class="list">'+(list.map(function(t){
+      return '<li><label class="chk"><input type="checkbox" data-c="task" data-id="'+t.id+'"'+(t.done?' checked':'')+'><span>'+esc(t.t)+'</span></label><button class="x" data-a="task-del" data-id="'+t.id+'" aria-label="Delete task">×</button></li>';
+    }).join('')||'<li class="empty">Nothing here yet.</li>')+'</ul>'+
+    '<form class="add" data-f="task"><input type="text" name="t" maxlength="140" placeholder="Add a task" autocomplete="off" aria-label="New task"><button class="btn primary" type="submit">Add</button></form>';
+}
+
+/* ============ gratitude ============ */
+function renderGrat(){
+  $('grat').innerHTML='<header><h2>Gratitude</h2><span class="small mute">'+S.gratitude.length+' moments</span></header>'+
+    '<form class="add" data-f="grat" style="margin:0 0 10px"><input type="text" name="t" maxlength="200" placeholder="I am grateful for…" autocomplete="off" aria-label="Gratitude entry"><button class="btn primary" type="submit">Add</button></form>'+
+    '<ul class="list">'+(S.gratitude.slice(0,30).map(function(g){
+      return '<li><span class="t">'+esc(g.t)+'<br><span class="small mute">'+fmtDay(g.d+'T12:00:00')+'</span></span><button class="x" data-a="grat-del" data-id="'+g.id+'" aria-label="Delete entry">×</button></li>';
+    }).join('')||'<li class="empty">Your list of small wonders starts here.</li>')+'</ul>';
+}
+
+/* ============ north star ============ */
+var STAR=[['prio','Top priorities','coral','Add a priority'],['goals','Goals','aqua','Add a goal'],['dreams','Desires & dreams','rose','Add a dream']];
+function renderStar(){
+  $('star').innerHTML='<header><h2>North Star</h2><span style="font-size:22px" class="c-gold">✦</span></header>'+STAR.map(function(c){
+    var list=S.star[c[0]];
+    return '<div class="star" style="'+(c[0]==='prio'?'margin-top:0':'')+'"><h3 class="c-'+c[2]+'">'+c[1]+'</h3><ul class="list">'+(list.map(function(x,i){
+      return '<li>'+(c[0]==='prio'?'<span class="n">'+(i+1)+'</span>':'')+'<span class="t">'+esc(x.t)+'</span><button class="x" data-a="star-del" data-k="'+c[0]+'" data-id="'+x.id+'" aria-label="Delete">×</button></li>';
+    }).join('')||'<li class="empty">Nothing yet.</li>')+'</ul><form class="add" data-f="star" data-k="'+c[0]+'"><input type="text" name="t" maxlength="140" placeholder="'+c[3]+'" autocomplete="off" aria-label="'+c[3]+'"><button class="btn" type="submit">Add</button></form></div>';
+  }).join('');
+}
+function renderValues(){
+  var off=Math.floor(NOW.getTime()/86400000);
+  $('values').innerHTML='<header><h2>Values compass</h2></header><div class="chips">'+VALUES.map(function(v,i){return '<span class="val c-'+ACC[(i+off)%5]+'">'+v+'</span>';}).join('')+'</div>';
+}
+
+/* ============ feeds ============ */
+var FEED={t:0,items:{},yt:{}};
+try{ var fc=JSON.parse(localStorage.getItem(FKEY)||'null'); if(fc&&fc.items) FEED=fc; if(!FEED.yt) FEED.yt={}; }catch(e){}
+function saveFeed(){ try{ localStorage.setItem(FKEY,JSON.stringify(FEED)); }catch(e){} }
+var BLOCK=/\b(trump|biden|harris|election|politic\w*|congress|senate|democrat\w*|republican\w*|war|shooting|collapse|outrage|scandal|doom|apocalyp\w*|terror\w*|cia|fbi|uap|alien\w*|government|murder|crime)\b/i;
+var WELL=/(heal|gut|anxi|trauma|sleep|nervous system|mental health|stress|grief|therap|meditat|brain|hormon|menopaus|emotion|mindful|burnout|attachment|wellness|health|nutrition|breath|depress|adhd|self[- ]love|boundar|inflammat|longevity|exercise|diet|addict|relationship|parent|intuition|mind|body|love|happi|joy|habit)/i;
+function yts(q){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q)+'&sp=CAI%253D'; }
+var SRC_ME=[
+ {id:'kass',name:'Yoga with Kassandra',yt:'yogawithkassandra',match:/kassandra/i,link:'https://www.youtube.com/@yogawithkassandra/videos'},
+ {id:'madfit',name:'MadFit',yt:'MadFit',match:/madfit/i,link:yts('MadFit')},
+ {id:'pam',name:'Pam Gregory',yt:'PamGregoryOfficial',match:/pam gregory/i,link:yts('Pam Gregory astrology')},
+ {id:'kay',name:'Kaypacha · Pele Report',yt:'Kaypacha',match:/kaypacha/i,link:yts('Kaypacha Pele Report')},
+ {id:'lee',name:'Lee Harris Energy',yt:'LeeHarrisEnergy',match:/lee harris/i,link:yts('Lee Harris Energy')},
+ {id:'lepera',name:'Dr. Nicole LePera',pod:'SelfHealers Soundboard',match:/selfhealers/i,link:yts('The Holistic Psychologist Nicole LePera')},
+ {id:'mayim',name:'Mayim Bialik\'s Breakdown · wellness only',pod:'Mayim Bialik\'s Breakdown',match:/mayim/i,well:true,link:'https://podcasts.apple.com/us/search?term='+encodeURIComponent('Mayim Bialik\'s Breakdown')}
+];
+var SRC_EZRA={id:'ezra',name:'The Ezra Klein Show',pod:'The Ezra Klein Show',match:/ezra klein/i,nofilter:true,link:'https://www.nytimes.com/column/ezra-klein-podcast'};
+function jsonp(url){
+  return new Promise(function(res,rej){
+    var cb='__jp'+uid(), s=document.createElement('script'), to=setTimeout(function(){done();rej(new Error('timeout'));},12000);
+    function done(){ clearTimeout(to); try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode) s.parentNode.removeChild(s); }
+    window[cb]=function(d){ done(); res(d); };
+    s.onerror=function(){ done(); rej(new Error('load')); };
+    s.src=url+(url.indexOf('?')<0?'?':'&')+'callback='+cb; document.head.appendChild(s);
+  });
+}
+function getText(url){
+  var ctl=('AbortController' in window)?new AbortController():null, to=setTimeout(function(){ if(ctl) ctl.abort(); },12000);
+  return fetch(url,ctl?{signal:ctl.signal}:{}).then(function(r){ clearTimeout(to); if(!r.ok) throw new Error(r.status); return r.text(); });
+}
+function getJSON(url){ return getText(url).then(JSON.parse); }
+var PROXY='https://api.allorigins.win/raw?url=';
+function recent(iso){ var t=new Date(iso).getTime(); return t && (Date.now()-t) < 7*86400000 && t<=Date.now()+86400000; }
+function loadPod(src){
+  return jsonp('https://itunes.apple.com/search?media=podcast&entity=podcast&limit=5&term='+encodeURIComponent(src.pod)).then(function(r){
+    var hit=(r.results||[]).filter(function(x){return src.match.test(x.collectionName||'');})[0];
+    if(!hit) throw new Error('nf');
+    return jsonp('https://itunes.apple.com/lookup?id='+hit.collectionId+'&media=podcast&entity=podcastEpisode&limit=15');
+  }).then(function(r){
+    return (r.results||[]).filter(function(x){return x.wrapperType==='podcastEpisode';}).map(function(x){return {t:x.trackName,u:x.trackViewUrl,d:x.releaseDate};});
+  });
+}
+function loadYT(src){
+  var p = FEED.yt[src.yt] ? Promise.resolve(FEED.yt[src.yt]) : getText(PROXY+encodeURIComponent('https://www.youtube.com/@'+src.yt)).then(function(h){
+    var m=h.match(/"externalId":"(UC[\w-]{22})"/)||h.match(/channel_id=(UC[\w-]{22})/); if(!m) throw new Error('id');
+    FEED.yt[src.yt]=m[1]; return m[1]; });
+  return p.then(function(id){ return getText(PROXY+encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id='+id)); }).then(function(x){
+    var doc=new DOMParser().parseFromString(x,'text/xml'), out=[], es=doc.getElementsByTagName('entry');
+    var author=(doc.getElementsByTagName('title')[0]||{}).textContent||'';
+    if(!src.match.test(author)){ delete FEED.yt[src.yt]; throw new Error('mismatch'); }
+    for(var i=0;i<es.length;i++){ var e=es[i], l=e.getElementsByTagName('link')[0];
+      out.push({t:(e.getElementsByTagName('title')[0]||{}).textContent,u:l?l.getAttribute('href'):'',d:(e.getElementsByTagName('published')[0]||{}).textContent}); }
+    return out;
+  });
+}
+function loadSrc(src){
+  return (src.pod?loadPod(src):loadYT(src)).then(function(items){
+    FEED.items[src.id]=items.filter(function(x){ return x.t && /^https:\/\//.test(x.u||'') && recent(x.d) && (src.nofilter || !BLOCK.test(x.t)) && (!src.well || WELL.test(x.t)); }).slice(0,4);
+  }).catch(function(){ if(!FEED.items[src.id]) FEED.items[src.id]=null; });
+}
+function feedHTML(src){
+  var it=FEED.items[src.id], body;
+  if(it===undefined) body='<div class="empty">Checking…</div>';
+  else if(it===null) body='<div class="empty">Couldn\'t fetch headlines — use the link to see the latest.</div>';
+  else if(!it.length) body='<div class="empty">Nothing new in the last 7 days.</div>';
+  else body=it.map(function(x){return '<a class="item" href="'+esc(x.u)+'" target="_blank" rel="noopener" data-track="1" data-src="'+esc(src.name)+'" data-title="'+esc(x.t)+'">'+esc(x.t)+'<span>'+fmtDay(x.d)+'</span></a>';}).join('');
+  return '<div class="feed-src"><div class="name"><span>'+esc(src.name)+'</span><a href="'+esc(src.link)+'" target="_blank" rel="noopener" data-track="1" data-src="'+esc(src.name)+'" data-title="Latest from '+esc(src.name)+'">Latest ↗</a></div>'+body+'</div>';
+}
+function renderForMe(){
+  $('forme').innerHTML='<header><h2>For me</h2><button class="btn" data-a="feed-refresh">↻ Refresh</button></header><p class="small mute">Headlines only · last 7 days · no politics, doom or outrage</p>'+SRC_ME.map(feedHTML).join('');
+}
+var SPORTS={};
+var TEAMS=[{k:'gb',name:'Packers',icon:'🏈',url:'https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/gb/schedule',link:'https://www.espn.com/nfl/team/schedule/_/name/gb',off:'Off-season — see you in September.'},
+           {k:'mil',name:'Brewers',icon:'⚾',url:'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/mil/schedule',link:'https://www.espn.com/mlb/team/schedule/_/name/mil',off:'Off-season — spring training starts in February.'}];
+function parseGames(j,abbr){
+  var past=[],next=[];
+  (j.events||[]).forEach(function(ev){
+    var c=(ev.competitions||[])[0]; if(!c) return;
+    var us=c.competitors.filter(function(x){return (x.team.abbreviation||'').toLowerCase()===abbr;})[0], them=c.competitors.filter(function(x){return x!==us;})[0];
+    if(!us||!them) return;
+    var st=(c.status||ev.status||{}).type||{}, g={d:ev.date,opp:(us.homeAway==='home'?'vs ':'at ')+(them.team.shortDisplayName||them.team.displayName||them.team.abbreviation)};
+    if(st.completed){ var a=us.score&&(us.score.displayValue||us.score.value), b=them.score&&(them.score.displayValue||them.score.value);
+      g.res=(us.winner?'W':(them.winner?'L':'T'))+' '+a+'–'+b; past.push(g); }
+    else if(new Date(ev.date).getTime()>Date.now()-6*3600000) next.push(g);
+  });
+  return {last:past[past.length-1],next:next.slice(0,2)};
+}
+function loadSports(){
+  return Promise.all(TEAMS.map(function(t){ return getJSON(t.url).then(function(j){ SPORTS[t.k]=parseGames(j,t.k); }).catch(function(){ SPORTS[t.k]=null; }); }));
+}
+function teamHTML(t){
+  var s=SPORTS[t.k], b;
+  if(s===undefined) b='<div class="empty">Loading…</div>';
+  else if(s===null) b='<div class="empty">Scores unavailable right now.</div>';
+  else { b='';
+    if(s.last && (Date.now()-new Date(s.last.d).getTime()<21*86400000 || s.next.length)) b+='<div class="game"><b style="font-weight:600" class="c-gold">'+esc(s.last.res)+'</b> '+esc(s.last.opp)+' <span class="mute small">· '+fmtDay(s.last.d)+'</span></div>';
+    s.next.forEach(function(g){ var d=new Date(g.d); b+='<div class="game">Next: '+esc(g.opp)+' <span class="mute small">· '+fmtDay(g.d)+', '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+'</span></div>'; });
+    if(!s.next.length) b+='<div class="empty">'+t.off+'</div>';
+  }
+  return '<div class="feed-src"><div class="name"><span>'+t.icon+' '+t.name+'</span><a href="'+t.link+'" target="_blank" rel="noopener">Schedule ↗</a></div>'+b+'</div>';
+}
+function renderForUs(){
+  var di=Math.floor(NOW.getTime()/86400000), me=ELEM[sgn(SKY.Moon)%4];
+  var tone={fire:'The fire Moon turns both of you up a notch.',earth:'The earth Moon favors something simple and tangible together.',air:'The air Moon makes this a talking day.',water:'The water Moon asks for softness with each other.'}[me];
+  $('forus').innerHTML='<header><h2>For us</h2><span class="small mute">you &amp; Matt</span></header>'+
+    TEAMS.map(teamHTML).join('')+
+    '<div class="star"><div class="eyebrow c-coral"><span class="glyph">'+SG[8]+'</span> Your Sagittarius vibe</div><p style="margin-top:6px">'+VIBE.Sag[di%7]+'</p>'+
+    '<div class="eyebrow c-aqua"><span class="glyph">'+SG[6]+'</span> Matt\'s Libra vibe</div><p style="margin-top:6px">'+VIBE.Lib[(di+3)%7]+' '+tone+'</p>'+
+    '<div class="eyebrow c-rose">Synastry note</div><p style="margin:6px 0 0">'+SYN[di%3]+'</p></div>'+
+    '<div style="height:8px"></div>'+feedHTML(SRC_EZRA);
+}
+function loadFeeds(force){
+  var all=SRC_ME.concat([SRC_EZRA]);
+  if(!force && Date.now()-FEED.t<3*3600000 && all.every(function(s){return FEED.items[s.id]!==undefined;})){ renderForMe(); renderForUs(); return Promise.resolve(); }
+  if(force){ FEED.items={}; }
+  renderForMe(); renderForUs();
+  return Promise.all(all.map(function(s){ return loadSrc(s).then(function(){ renderForMe(); renderForUs(); }); })).then(function(){
+    if(all.some(function(s){return FEED.items[s.id];})) FEED.t=Date.now();
+    saveFeed();
+  });
+}
+
+/* ============ weather ============ */
+var WCODE={0:['☀️','Clear'],1:['🌤️','Mostly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],45:['🌫️','Fog'],48:['🌫️','Fog'],51:['🌦️','Drizzle'],53:['🌦️','Drizzle'],55:['🌦️','Drizzle'],56:['🌧️','Freezing drizzle'],57:['🌧️','Freezing drizzle'],61:['🌧️','Light rain'],63:['🌧️','Rain'],65:['🌧️','Heavy rain'],66:['🌧️','Freezing rain'],67:['🌧️','Freezing rain'],71:['🌨️','Light snow'],73:['🌨️','Snow'],75:['❄️','Heavy snow'],77:['🌨️','Snow grains'],80:['🌦️','Showers'],81:['🌦️','Showers'],82:['⛈️','Heavy showers'],85:['🌨️','Snow showers'],86:['🌨️','Snow showers'],95:['⛈️','Thunderstorm'],96:['⛈️','Thunderstorm'],99:['⛈️','Thunderstorm']};
+function loadWeather(){
+  return getJSON('https://api.open-meteo.com/v1/forecast?latitude=43.0731&longitude=-89.4012&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&timezone=America%2FChicago&forecast_days=1').then(function(j){
+    var w=WCODE[j.current.weather_code]||['🌡️','—'];
+    WX={temp:Math.round(j.current.temperature_2m),icon:w[0],text:w[1],hi:Math.round(j.daily.temperature_2m_max[0]),lo:Math.round(j.daily.temperature_2m_min[0])};
+  }).catch(function(){ WX=false; }).then(renderBanner);
+}
+
+/* ============ sunday summary ============ */
+function renderSunday(){
+  var wk=S.opened.filter(function(x){return x.d>=WEEK;}), landed=wk.filter(function(x){return x.landed;});
+  var hab=0, water=0, moods=[]; for(var d in S.days){ if(d>=WEEK){ var o=S.days[d]; hab+=Object.keys(o.habits||{}).filter(function(k){return o.habits[k];}).length; water+=o.water||0; if(o.mood!=null) moods.push(MOODS[o.mood][0]); } }
+  var gr=S.gratitude.filter(function(g){return g.d>=WEEK;}).length;
+  var wkNo=Math.floor(weekStart(NOW).getTime()/(7*86400000));
+  var starter = landed.length ? 'Tell Matt about “'+landed[landed.length-1].t+'” — what about it landed for you, and what does it stir up for him?' : STARTERS[wkNo%STARTERS.length];
+  $('sunday').innerHTML='<header><h2>Sunday summary</h2><span class="small mute">'+(NOW.getDay()===0?'today ✦':'week so far')+'</span></header>'+
+    '<p class="small mute">Week of '+fmtDay(WEEK+'T12:00:00')+' · '+(Math.round(plantScore()*100)/100)+' plant pts · '+hab+' habits · '+water+' glasses · '+gr+' gratitudes'+(moods.length?' · '+moods.join(''):'')+'</p>'+
+    '<div class="eyebrow">What I opened</div><ul class="list">'+(wk.map(function(x){
+      return '<li><span class="t">'+esc(x.t)+'<br><span class="small mute">'+esc(x.src)+'</span></span><button class="chip" style="flex:none" data-a="landed" data-id="'+x.id+'" aria-pressed="'+(!!x.landed)+'">'+(x.landed?'♥ landed':'♡ landed?')+'</button></li>';
+    }).join('')||'<li class="empty">Links you open from For Me and For Us will collect here.</li>')+'</ul>'+
+    '<div class="eyebrow" style="margin-top:14px">What landed</div>'+(landed.length?'<p style="margin-top:6px">'+landed.map(function(x){return esc(x.t);}).join(' · ')+'</p>':'<div class="empty">Tap “landed?” on anything that stayed with you.</div>')+
+    '<div class="star"><div class="eyebrow c-rose">Conversation starter for us</div><p style="margin:6px 0 0">'+esc(starter)+'</p></div>';
+}
+
+/* ============ natal reference ============ */
+function renderNatal(){
+  var rows=[['Sun','Sagittarius 17°37′'],['Moon','Aries 25°25′'],['Asc','Cancer 28°57′'],['MC','Aries 11°43′'],['Mercury','Sagittarius 8°11′ ℞'],['Venus','Scorpio 9°48′'],['Mars','Sagittarius 27°58′'],['Jupiter','Leo 8°43′ ℞'],['Saturn','Virgo 13°44′'],['Uranus','Scorpio 18°34′'],['Neptune','Sagittarius 18°01′'],['Pluto','Libra 18°41′'],['Node','Virgo 22°57′']];
+  $('natal').innerHTML='<details style="border:0"><summary><h2>Full natal chart</h2></summary>'+
+    '<p class="small mute">December 9, 1978 · 7:27 PM · Madison, WI</p>'+
+    '<table class="natal">'+rows.map(function(r){return '<tr><td><span class="glyph c-gold">'+PG[r[0]]+'</span>&nbsp; '+NNAME[r[0]]+'</td><td>'+r[1]+'</td></tr>';}).join('')+'</table>'+
+    '<div class="eyebrow" style="margin-top:16px">Tightest natal aspects</div><table class="natal"><tr><td>Sun conjunct Neptune</td><td>0.4°</td></tr><tr><td>Mercury trine Jupiter</td><td>0.5°</td></tr><tr><td>Moon trine Mars</td><td>2.6°</td></tr></table>'+
+    '<div class="eyebrow" style="margin-top:16px">Matt · Sept 30, 1980 · 7:32 PM · Stoughton, WI</div><table class="natal"><tr><td>Sun</td><td>Libra</td></tr><tr><td>Moon</td><td>Cancer</td></tr><tr><td>Rising</td><td>Taurus</td></tr><tr><td>Standout aspect</td><td>Sun square Moon</td></tr></table>'+
+    '<div class="eyebrow" style="margin-top:16px">Synastry</div><table class="natal"><tr><td>His Venus trine my Moon</td><td>near-exact ✦</td></tr><tr><td>His Sun sextile my Mercury</td><td></td></tr><tr><td>His Venus trine my Mars</td><td></td></tr></table>'+
+    '<p class="small mute" style="margin-top:12px">Daily positions are computed on your phone with a compact ephemeris (accurate to within a few arcminutes for most bodies).</p></details>';
+}
+
+/* ============ settings ============ */
+var resetArmed=false, setMsg='';
+function renderSettings(){
+  $('settings').innerHTML='<header><h2>Settings</h2><button class="btn" data-a="settings">Close</button></header>'+
+    '<p class="small '+(storageOK?'c-aqua':'c-coral')+'">'+(storageOK?'✓ Saving works on this device.':'✗ This browser is blocking saved data.')+'</p>'+
+    '<div class="eyebrow">My name (for the greeting)</div><form class="add" data-f="name" style="margin:6px 0 16px"><input type="text" name="t" maxlength="24" value="'+esc(S.name)+'" placeholder="Your name" autocomplete="off" aria-label="Name"><button class="btn primary" type="submit">Save</button></form>'+
+    '<div class="eyebrow">Backup</div><p class="small mute" style="margin-top:6px">Copy this text somewhere safe. To restore, paste it below and tap Restore.</p>'+
+    '<textarea id="backup" style="min-height:90px;font-size:12px" aria-label="Backup data"></textarea>'+
+    '<div class="row" style="margin-top:10px"><button class="btn" data-a="bk-make">Show my data</button><button class="btn" data-a="bk-copy">Copy</button><button class="btn" data-a="bk-restore">Restore</button><button class="btn danger" data-a="reset">'+(resetArmed?'Tap again to erase everything':'Erase all data')+'</button></div>'+
+    '<p class="small c-gold" id="setMsg" style="margin:10px 0 0">'+esc(setMsg)+'</p>';
+}
+
+/* ============ events ============ */
+function addTo(list,text,extra){ var o={id:uid(),t:text}; if(extra) for(var k in extra) o[k]=extra[k]; list.push(o); return o; }
+function removeId(list,id){ for(var i=0;i<list.length;i++) if(list[i].id===id){ list.splice(i,1); return; } }
+document.addEventListener('submit',function(e){
+  var f=e.target; if(!f.getAttribute||!f.getAttribute('data-f')) return;
+  e.preventDefault();
+  var inp=f.elements.t, v=(inp.value||'').trim(), kind=f.getAttribute('data-f');
+  if(kind==='name'){ S.name=v; save(); renderMast(); setMsg='Saved.'; renderSettings(); return; }
+  if(!v) { inp.focus(); return; }
+  if(kind==='task'){ addTo(S.tasks[S.tab],v,{done:false}); save(); renderTasks(); refocus('tasks'); }
+  else if(kind==='grat'){ S.gratitude.unshift({id:uid(),t:v,d:TODAY}); save(); renderGrat(); renderSunday(); refocus('grat'); }
+  else if(kind==='habit'){ addTo(S.habits,v); save(); renderHabits(); refocus('habits'); }
+  else if(kind==='star'){ addTo(S.star[f.getAttribute('data-k')],v); save(); renderStar(); }
+  else if(kind==='intent'){ S.intention=v.charAt(0).toUpperCase()+v.slice(1); intentOpen=false; save(); renderIntent(); }
+});
+function refocus(sec){ var i=$(sec).querySelector('form.add input'); if(i){ try{ i.focus({preventScroll:true}); }catch(e){ i.focus(); } } }
+document.addEventListener('change',function(e){
+  var t=e.target, c=t.getAttribute&&t.getAttribute('data-c'); if(!c) return;
+  var id=t.getAttribute('data-id');
+  if(c==='habit'){ day().habits[id]=t.checked; save(); renderHabits(); renderSunday(); }
+  if(c==='task'){ (S.tasks[S.tab]||[]).forEach(function(x){ if(x.id===id) x.done=t.checked; }); save(); renderTasks(); }
+});
+document.addEventListener('click',function(e){
+  var el=e.target.closest?e.target.closest('[data-a],[data-track]'):null; if(!el) return;
+  if(el.hasAttribute('data-track')){
+    var title=el.getAttribute('data-title'), last=S.opened[S.opened.length-1];
+    if(!(last&&last.t===title&&last.d===TODAY)){ S.opened.push({id:uid(),t:title,src:el.getAttribute('data-src'),u:el.href,d:TODAY,landed:false}); save(); setTimeout(renderSunday,50); }
+    return; // let the link open normally
+  }
+  var a=el.getAttribute('data-a'), v=el.getAttribute('data-v'), id=el.getAttribute('data-id'), d=day();
+  switch(a){
+    case 'settings': var p=$('settings'), open=p.classList.contains('hide'); resetArmed=false; setMsg=''; if(open) renderSettings(); p.classList.toggle('hide',!open); $('setBtn').setAttribute('aria-expanded',open); if(open) p.scrollIntoView({block:'start'}); break;
+    case 'regen': S.seed=(S.seed||0)+1; save(); renderHoro(); break;
+    case 'intent-toggle': intentOpen=!intentOpen; renderIntent(); break;
+    case 'intent-set': S.intention=v; intentOpen=false; save(); renderIntent(); break;
+    case 'mood': var i=+el.getAttribute('data-i'); d.mood=(d.mood===i?null:i); save(); renderMood(); renderSunday(); break;
+    case 'water': var n=+el.getAttribute('data-i')+1; d.water=(d.water===n?n-1:n); save(); renderWater(); renderSunday(); break;
+    case 'plant': var ix=S.plants.items.indexOf(v); if(ix<0) S.plants.items.push(v); else S.plants.items.splice(ix,1); el.setAttribute('aria-pressed',ix<0); save(); renderPlantTop(); renderSunday(); break;
+    case 'habit-edit': habitEdit=!habitEdit; renderHabits(); break;
+    case 'habit-del': removeId(S.habits,id); save(); renderHabits(); break;
+    case 'tab': S.tab=v; save(); renderTasks(); break;
+    case 'task-del': removeId(S.tasks[S.tab],id); save(); renderTasks(); break;
+    case 'grat-del': removeId(S.gratitude,id); save(); renderGrat(); renderSunday(); break;
+    case 'star-del': removeId(S.star[el.getAttribute('data-k')],id); save(); renderStar(); break;
+    case 'landed': S.opened.forEach(function(x){ if(x.id===id) x.landed=!x.landed; }); save(); renderSunday(); break;
+    case 'feed-refresh': loadFeeds(true); loadSports().then(renderForUs); break;
+    case 'bk-make': $('backup').value=JSON.stringify(S); $('setMsg').textContent='Your data is in the box above.'; break;
+    case 'bk-copy': var b=$('backup'); if(!b.value) b.value=JSON.stringify(S); b.focus(); b.select(); try{ b.setSelectionRange(0,b.value.length); }catch(x){}
+      var ok=false; try{ ok=document.execCommand('copy'); }catch(x){} if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(b.value).catch(function(){}); ok=true; }
+      $('setMsg').textContent=ok?'Copied.':'Select the text above and copy it.'; break;
+    case 'bk-restore': try{ var o=JSON.parse($('backup').value); if(!o||typeof o!=='object'||!o.tasks) throw 0; localStorage.setItem(KEY,JSON.stringify(o)); load(); renderAll(); setMsg='Restored.'; }catch(x){ setMsg='That doesn\'t look like a backup — paste the full text and try again.'; } renderSettings(); break;
+    case 'reset': if(!resetArmed){ resetArmed=true; renderSettings(); } else { try{ localStorage.removeItem(KEY); localStorage.removeItem(FKEY); }catch(x){} resetArmed=false; load(); renderAll(); setMsg='Everything was erased.'; renderSettings(); } break;
+  }
+});
+var reflTimer;
+$('reflText').addEventListener('input',function(){
+  day().reflection=this.value; $('reflSaved').textContent='…';
+  clearTimeout(reflTimer); reflTimer=setTimeout(function(){ save(); $('reflSaved').textContent=storageOK?'saved ✓':'not saved'; },400);
+});
+$('reflText').addEventListener('blur',function(){ day().reflection=this.value; save(); });
+
+/* ============ boot ============ */
+function renderAll(){
+  renderMast(); renderBanner(); renderHoro(); renderIntent(); renderSky(); renderMood(); renderWater(); renderPlants(); renderHabits(); renderTasks(); renderGrat(); renderStar(); renderValues(); renderForMe(); renderForUs(); renderSunday(); renderNatal();
+  $('reflText').value=day().reflection||'';
+}
+function boot(){
+  NOW=new Date(); TODAY=dkey(NOW); WEEK=dkey(weekStart(NOW));
+  load(); computeSky(); renderAll();
+  if(!storageOK) $('storeWarn').classList.remove('hide');
+  loadWeather(); loadFeeds(false); loadSports().then(renderForUs);
+}
+boot();
+// refresh when the tab comes back on a new day (or after an hour away)
+var bootAt=Date.now();
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible' && (dkey(new Date())!==TODAY || Date.now()-bootAt>3600000)){
+    if(document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    bootAt=Date.now(); boot();
+  }
+});
+</script>
+</body>
+</html>
