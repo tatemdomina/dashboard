@@ -177,7 +177,7 @@ var NOW = new Date(), TODAY = dkey(NOW), WEEK = dkey(weekStart(NOW));
 /* ============ storage ============ */
 var KEY='mysky-v1', FKEY='mysky-feed-v1', storageOK=true;
 var DEF={ name:'', place:'Madison, WI', intention:'Wisdom', seed:0, tab:'today',
-  plants:{week:WEEK,items:[]}, days:{},
+  plants:{week:WEEK,items:[]}, customPlants:[], days:{},
   habits:[{id:'h1',t:'Morning movement'},{id:'h2',t:'Meditate or breathe'},{id:'h3',t:'Time outside'},{id:'h4',t:'Read or learn something'},{id:'h5',t:'Screens off by 10'}],
   gratitude:[], tasks:{today:[],week:[],long:[]}, star:{prio:[],goals:[],dreams:[]}, opened:[] };
 var S;
@@ -189,6 +189,7 @@ function load(){
   if(o&&typeof o==='object'){ for(var k in o) S[k]=o[k]; }
   ['today','week','long'].forEach(function(k){ if(!Array.isArray(S.tasks[k])) S.tasks[k]=[]; });
   ['prio','goals','dreams'].forEach(function(k){ if(!Array.isArray(S.star[k])) S.star[k]=[]; });
+  if(!Array.isArray(S.customPlants)) S.customPlants=[];
   if(!S.plants||S.plants.week!==WEEK) S.plants={week:WEEK,items:[]};   // weekly reset, Sunday to Sunday
   var cut=new Date(NOW); cut.setDate(cut.getDate()-45); var ck=dkey(cut);
   for(var d in S.days) if(d<ck) delete S.days[d];
@@ -323,8 +324,8 @@ var ACC=['coral','gold','aqua','lilac','rose'];
 var MOODS=[['😄','Joyful'],['🙂','Content'],['😌','Calm'],['😐','Neutral'],['😔','Low'],['😰','Anxious'],['😤','Frustrated']];
 var PLANTS=[
  ['Vegetables',1,['Spinach','Kale','Arugula','Romaine','Broccoli','Cauliflower','Carrot','Bell pepper','Tomato','Cucumber','Zucchini','Sweet potato','Potato','Onion','Garlic','Mushrooms','Celery','Beet','Cabbage','Brussels sprouts','Green beans','Peas','Corn','Asparagus','Squash','Avocado']],
- ['Fruit',1,['Apple','Banana','Blueberries','Strawberries','Raspberries','Orange','Lemon','Lime','Grapes','Pear','Peach','Mango','Pineapple','Cherries','Kiwi','Dates','Cranberries','Pomegranate']],
- ['Grains',1,['Oats','Brown rice','Quinoa','Whole wheat','Barley','Farro','Popcorn','Buckwheat','Wild rice']],
+ ['Fruit',1,['Apple','Banana','Blueberries','Strawberries','Raspberries','Orange','Lemon','Lime','Grapes','Pear','Peach','Mango','Pineapple','Cherries','Kiwi','Dates','Cranberries','Pomegranate','Cantaloupe','Watermelon','Honeydew','Grapefruit','Plum','Blackberries','Apricot','Fig','Raisins']],
+ ['Grains',1,['Oats','Brown rice','Quinoa','Whole wheat','Barley','Farro','Popcorn','Buckwheat','Wild rice','Rye','Wheat','Spelt','Millet','Sourdough','Corn tortilla']],
  ['Beans & legumes',1,['Black beans','Chickpeas','Lentils','Kidney beans','Pinto beans','White beans','Edamame','Tofu','Peanuts']],
  ['Nuts & seeds',1,['Almonds','Walnuts','Cashews','Pecans','Pistachios','Chia','Flax','Hemp seeds','Pumpkin seeds','Sunflower seeds','Sesame']],
  ['Other plants',1,['Coffee','Tea','Dark chocolate','Olives']],
@@ -439,7 +440,18 @@ function renderWater(){
 }
 
 /* ============ plants ============ */
-function plantScore(){ return S.plants.items.reduce(function(a,p){return a+(PVAL[p]||1);},0); }
+function pval(p){ if(PVAL[p]) return PVAL[p]; var c=S.customPlants.filter(function(x){return x.n===p;})[0]; return c?c.v:1; }
+function plantScore(){ return S.plants.items.reduce(function(a,p){return a+pval(p);},0); }
+var plantManage=false;
+function addPlant(name,v){
+  name=name.trim().replace(/\s+/g,' '); if(!name) return false;
+  name=name.charAt(0).toUpperCase()+name.slice(1);
+  var all=Object.keys(PVAL).concat(S.customPlants.map(function(x){return x.n;}));
+  var hit=all.filter(function(x){return x.toLowerCase()===name.toLowerCase();})[0];
+  if(hit) name=hit; else S.customPlants.push({n:name,v:v});
+  if(S.plants.items.indexOf(name)<0) S.plants.items.push(name);
+  save(); renderPlants(); renderSunday(); return true;
+}
 function renderPlantTop(){
   var sc=plantScore(), items=S.plants.items, end=weekStart(NOW); end.setDate(end.getDate()+7);
   $('plantTop').innerHTML='<div class="row" style="justify-content:space-between;align-items:baseline"><div><span class="score c-aqua">'+(Math.round(sc*100)/100)+'</span> <span class="mute">/ 20 plant points</span></div><span class="small mute">resets '+end.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+'</span></div>'+
@@ -448,10 +460,20 @@ function renderPlantTop(){
 }
 function renderPlants(){
   var has={}; S.plants.items.forEach(function(p){has[p]=1;});
+  var openState=[].map.call($('plants').querySelectorAll('details'),function(d){return d.open;});
+  function isOpen(i){ return openState.length?openState[i]:i===0; }
   $('plants').innerHTML='<header><h2>Plant diversity</h2><span class="small mute">this week</span></header><div id="plantTop"></div>'+
     PLANTS.map(function(g,gi){
-      return '<details'+(gi===0?' open':'')+'><summary>'+g[0]+'</summary><div class="chips">'+g[2].map(function(p){return '<button class="chip'+(g[1]<1?' spice':'')+'" data-a="plant" data-v="'+esc(p)+'" aria-pressed="'+(!!has[p])+'">'+esc(p)+'</button>';}).join('')+'</div></details>';
-    }).join('');
+      return '<details'+(isOpen(gi)?' open':'')+'><summary>'+g[0]+'</summary><div class="chips">'+g[2].map(function(p){return '<button class="chip'+(g[1]<1?' spice':'')+'" data-a="plant" data-v="'+esc(p)+'" aria-pressed="'+(!!has[p])+'">'+esc(p)+'</button>';}).join('')+'</div></details>';
+    }).join('')+
+    '<details'+(isOpen(PLANTS.length)||plantManage?' open':'')+'><summary>My additions</summary>'+
+      (S.customPlants.length?'<div class="chips" style="padding-bottom:10px">'+S.customPlants.map(function(c){
+        return plantManage?'<button class="chip" data-a="plant-remove" data-v="'+esc(c.n)+'" style="border-color:var(--coral);color:var(--coral)">× '+esc(c.n)+'</button>'
+                          :'<button class="chip'+(c.v<1?' spice':'')+'" data-a="plant" data-v="'+esc(c.n)+'" aria-pressed="'+(!!has[c.n])+'">'+esc(c.n)+(c.v<1?' ¼':'')+'</button>';
+      }).join('')+'</div>':'<p class="small mute">Something not on the lists? Add it once and it stays here as a chip.</p>')+
+      '<form class="add" data-f="plant" style="margin-top:0"><input type="text" name="t" maxlength="30" placeholder="e.g. Jicama" autocomplete="off" aria-label="Add a plant"></form>'+
+      '<div class="row" style="margin:8px 0 14px"><button class="btn primary" data-a="plant-add" data-v="1">+ Plant (1 pt)</button><button class="btn" data-a="plant-add" data-v="0.25">+ Herb/spice (¼)</button>'+
+      (S.customPlants.length?'<button class="btn ghost" data-a="plant-manage">'+(plantManage?'Done':'Remove…')+'</button>':'')+'</div></details>';
   renderPlantTop();
 }
 
@@ -682,6 +704,7 @@ document.addEventListener('submit',function(e){
   var inp=f.elements.t, v=(inp.value||'').trim(), kind=f.getAttribute('data-f');
   if(kind==='name'){ S.name=v; save(); renderMast(); setMsg='Saved.'; renderSettings(); return; }
   if(!v) { inp.focus(); return; }
+  if(kind==='plant'){ addPlant(v,1); return; }
   if(kind==='task'){ addTo(S.tasks[S.tab],v,{done:false}); save(); renderTasks(); refocus('tasks'); }
   else if(kind==='grat'){ S.gratitude.unshift({id:uid(),t:v,d:TODAY}); save(); renderGrat(); renderSunday(); refocus('grat'); }
   else if(kind==='habit'){ addTo(S.habits,v); save(); renderHabits(); refocus('habits'); }
@@ -711,6 +734,9 @@ document.addEventListener('click',function(e){
     case 'mood': var i=+el.getAttribute('data-i'); d.mood=(d.mood===i?null:i); save(); renderMood(); renderSunday(); break;
     case 'water': var n=+el.getAttribute('data-i')+1; d.water=(d.water===n?n-1:n); save(); renderWater(); renderSunday(); break;
     case 'plant': var ix=S.plants.items.indexOf(v); if(ix<0) S.plants.items.push(v); else S.plants.items.splice(ix,1); el.setAttribute('aria-pressed',ix<0); save(); renderPlantTop(); renderSunday(); break;
+    case 'plant-add': var pi=$('plants').querySelector('form[data-f=plant] input'); if(!addPlant(pi.value,+v)) pi.focus(); break;
+    case 'plant-manage': plantManage=!plantManage; renderPlants(); break;
+    case 'plant-remove': S.customPlants=S.customPlants.filter(function(x){return x.n!==v;}); S.plants.items=S.plants.items.filter(function(x){return x!==v;}); if(!S.customPlants.length) plantManage=false; save(); renderPlants(); renderSunday(); break;
     case 'habit-edit': habitEdit=!habitEdit; renderHabits(); break;
     case 'habit-del': removeId(S.habits,id); save(); renderHabits(); break;
     case 'tab': S.tab=v; save(); renderTasks(); break;
