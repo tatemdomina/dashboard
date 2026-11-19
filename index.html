@@ -96,6 +96,17 @@ details .chips{padding:2px 0 14px}
 .word{font-family:var(--serif);font-style:italic;font-size:44px;line-height:1.1;color:var(--gold);margin:2px 0 12px;overflow-wrap:anywhere}
 .asp{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(168,150,240,.12)}
 .asp:last-child{border-bottom:0}
+details.asp-d{border-top:0;border-bottom:1px solid rgba(168,150,240,.12)}
+details.asp-d:last-of-type{border-bottom:0}
+details.asp-d summary.asp{border-bottom:0;justify-content:flex-start}
+details.asp-d summary{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+details.asp-d summary::after{content:'';display:block;box-sizing:content-box;padding:0;font-size:0;line-height:0;text-align:left;width:7px;height:7px;min-width:7px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(-45deg);transition:transform .2s;flex:none;margin:0 6px 0 2px}
+details.asp-d[open] summary::after{content:'';transform:rotate(45deg);border-color:var(--gold)}
+details.asp-d[open] summary{color:var(--gold)}
+.asp-body{padding:2px 2px 16px;font-size:14.5px}
+.asp-body h4{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lilac);font-weight:600;margin:14px 0 5px}
+.asp-body p{margin:0 0 8px}
+.asp-body .journal{font-family:var(--hand);font-size:23px;line-height:1.2;color:var(--rose);margin-top:6px}
 .asp .g{font-size:19px;width:66px;flex:none;letter-spacing:2px}
 .asp .d{flex:1;min-width:0;font-size:14px}
 .asp .o{font-size:12.5px;color:var(--mute);text-align:right;flex:none}
@@ -416,14 +427,208 @@ function renderIntent(){
 }
 
 /* ============ current sky ============ */
+/* ============ aspect interpretations ============ */
+var TP={
+ Moon:{role:'the Moon, which sets the emotional weather: moods, needs and instincts',dur:'a few hours',
+  adjS:['comforting','intuitive','nurturing','receptive'],adjH:['restless','tender','reactive','hungry'],
+  feelS:'A pleasant emotional ease. Things feel naturally right, and your needs and actions line up.',
+  feelH:'A passing mood or itch. You may feel more sensitive or impatient, or in need of something you can\'t quite name. It moves on within hours.',
+  doS:'Notice what feels good and do more of it today.',
+  doH:'Name the feeling, meet the need simply (water, food, rest, a hug) and wait a few hours before deciding anything big.'},
+ Sun:{role:'the Sun, which brings attention, vitality and conscious focus',dur:'a few days',
+  adjS:['confident','radiant','clear','generous'],adjH:['spotlit','pressured','ego-charged','demanding'],
+  feelS:'More energy and confidence in this part of your life. It is easy to be seen and appreciated.',
+  feelH:'More heat or friction. The spotlight shows where you are stretched between what you want and what is being asked of you.',
+  doS:'Step forward: share, create, show your work.',
+  doH:'Rest enough, and choose the response that keeps your integrity rather than the one that proves a point.'},
+ Mercury:{role:'Mercury, the messenger, which stirs up thoughts, conversations, news, errands and plans',dur:'a few days (weeks around a retrograde)',
+  adjS:['clever','fluent','curious','well-timed'],adjH:['scattered','crossed','busy','overthought'],
+  feelS:'Ideas click and conversations flow. It\'s a good window for writing, planning, learning and talking things through.',
+  feelH:'Mental noise: overthinking, crossed wires, too many tabs open. A misunderstanding is more likely than a real conflict.',
+  doS:'Write it down, send the message, have the talk.',
+  doH:'Slow down, ask clarifying questions, and re-read before you send.',
+  retro:'Mercury retrograde makes this a time to review rather than launch. Re-read, re-think, revisit old conversations and reconnect with people from the past.'},
+ Venus:{role:'Venus, which brings love, pleasure, beauty, money and the wish to connect',dur:'a few days to a week',
+  adjS:['loving','graceful','pleasurable','harmonious'],adjH:['yearning','indulgent','tender','bittersweet'],
+  feelS:'Sweetness and ease. Affection, compliments, beauty and small pleasures come easily.',
+  feelH:'A pull toward pleasure or approval. You may notice where you want more love, or where you over-give.',
+  doS:'Say yes to beauty: music, color, flowers, a date with Matt, a treat that actually nourishes you.',
+  doH:'Ask for what you want instead of waiting to be guessed, and let your kindness include you.',
+  retro:'Venus retrograde turns love and values inward. You reassess what, and whom, you truly value, and old loves or old tastes may resurface. It\'s not the time to rush big purchases or makeovers.'},
+ Mars:{role:'Mars, which brings energy, drive, desire and courage, along with some heat',dur:'one to two weeks (months if Mars is retrograde)',
+  adjS:['bold','energized','decisive','courageous'],adjH:['heated','impatient','combative','urgent'],
+  feelS:'A surge of motivation and courage. It\'s easier to start things and stand up for yourself.',
+  feelH:'Friction or irritation: impatience, rushing, flashes of anger, or a strong push to act. Accidents happen when you hurry.',
+  doS:'Put the energy into something that takes courage: start the project, have the honest conversation, move your body hard.',
+  doH:'Move your body before you move your mouth. Channel the heat into exercise, cleaning or a clear boundary, not an argument.',
+  retro:'Mars retrograde turns drive inward. Frustration or low energy may surface, and it\'s better for revising strategy and finishing old battles than for starting new ones.'},
+ Jupiter:{role:'Jupiter, the great expander, which brings growth, opportunity, faith and generosity, and sometimes excess',dur:'a few weeks, often months with retrograde passes',
+  adjS:['expansive','lucky','generous','wise'],adjH:['overextended','excessive','restless','overconfident'],
+  feelS:'A sense of possibility and faith. Doors open, people help, and things grow more easily than usual.',
+  feelH:'Too much of a good thing: overcommitting, overspending, overpromising, or restlessly wanting more. Often still lucky, but it needs limits.',
+  doS:'Say yes, think bigger, learn something, and say thank you out loud.',
+  doH:'Grow, but choose. Pick one expansion and let the rest wait.',
+  retro:'Jupiter retrograde is a time of inner growth. Wisdom, faith and meaning develop quietly, and opportunities from the past may come back around.'},
+ Saturn:{role:'Saturn, the patient teacher, which brings structure, responsibility, time, effort and maturity',dur:'several months, often in three passes over about a year',
+  adjS:['disciplined','steady','grounded','seasoned'],adjH:['tested','pressured','sobered','slowed'],
+  feelS:'Steady, earned progress. Commitments feel solid, effort pays off, and people trust your seriousness. It tends to feel quietly productive rather than exciting.',
+  feelH:'Heaviness, delay or pressure, or a reality check about what isn\'t working. It is asking for maturity, not handing out punishment.',
+  doS:'Commit to a long-term structure: a schedule, a practice, a plan with milestones. What you build now lasts.',
+  doH:'Do the one real thing, accept the limit, and give yourself more time than you think you need. Self-compassion is part of the discipline.',
+  retro:'Saturn retrograde turns the lesson inward. Instead of pushing forward, you review and restructure: revisiting commitments, old plans and the inner rules you live by. The effort shifts from outer achievement to inner authority.'},
+ Uranus:{role:'Uranus, the awakener, which brings surprise, change, freedom and sudden insight',dur:'several months, often in three passes',
+  adjS:['inventive','liberated','awakened','original'],adjH:['disrupted','restless','unsettled','electric'],
+  feelS:'Exciting change you can work with: flashes of insight, fresh ideas, new people, a welcome break from routine.',
+  feelH:'Restlessness, sudden change, or an urge to break free. Things may shift unexpectedly, or you may feel jittery.',
+  doS:'Try the new thing, follow the hunch, change one routine.',
+  doH:'Expect the unexpected and keep some slack in your schedule. Change one thing at a time rather than everything at once, and look after your nervous system.',
+  retro:'Uranus retrograde makes the awakening internal: insights about where you need more freedom, and quieter, inner revolutions.'},
+ Neptune:{role:'Neptune, the dreamer, which brings inspiration, intuition, compassion and spirituality, and sometimes fog',dur:'a year or more; this is a long, slow tide',
+  adjS:['inspired','intuitive','compassionate','imaginative'],adjH:['foggy','dreamy','porous','uncertain'],
+  feelS:'Softened edges and a heightened imagination. Music, art, meditation, water and dreams feel especially meaningful.',
+  feelH:'Confusion, tiredness or uncertainty. Boundaries blur and it\'s easy to idealize or to doubt. Clarity comes slowly.',
+  doS:'Create, pray, meditate, swim, listen to music, and write down your dreams.',
+  doH:'Don\'t force clarity. Rest, check the facts, avoid escapism, and let the picture come into focus over time.',
+  retro:'Neptune retrograde lifts the fog a little. Illusions can dissolve, and you see more clearly what is real.'},
+ Pluto:{role:'Pluto, the transformer, which brings depth, power, intensity, endings and rebirth',dur:'a year or more, in several passes',
+  adjS:['empowered','deep','regenerative','focused'],adjH:['intense','compulsive','transforming','pressured'],
+  feelS:'Quiet, deep empowerment. You can change something at the root, and the change sticks.',
+  feelH:'Intensity, power struggles, or a sense that something must end or transform. Old patterns surface so they can be released.',
+  doS:'Do the deep work: therapy, shadow journaling, honest conversations, decluttering.',
+  doH:'Let go of what is already over. Notice where you grip for control, and choose truth over comfort.',
+  retro:'Pluto retrograde turns transformation inward: deep psychological work, shadow and healing rather than outer upheaval.'}
+};
+var NP={
+ Sun:{what:'your Sun: your core identity, vitality and purpose',nouns:['purpose','self-expression','vitality','confidence'],
+  chart:'Your Sun is in Sagittarius in your 6th house, fused with Neptune within half a degree. You are a seeker and teacher at heart, deeply intuitive and artistic, and you find purpose through daily work, health and meaningful service. Because of Neptune, transits to your Sun are felt in your body and spirit, not just your schedule.',
+  ask:'Where do I want to shine more, and what is draining my light?'},
+ Moon:{what:'your Moon: your feelings, needs and emotional body',nouns:['feelings','needs','comfort','instincts'],
+  chart:'Your Moon is in Aries in your 10th house, trine Mars: quick, brave, honest feelings that want to act. It is also your chart ruler (because you have Cancer Rising), so anything touching your Moon tends to be felt strongly and personally, and often links to your work and public life.',
+  ask:'What do I actually need right now, and am I letting myself have it?'},
+ Asc:{what:'your Rising sign: your body, presence and the way you meet the world',nouns:['presence','body','first impressions','self-image'],
+  chart:'Your Ascendant is at the very end of Cancer (28°57′), leaning toward Leo. You meet the world with warmth, protectiveness and intuition, plus a creative spark. Transits here are felt personally: in your body, your appearance and how you are showing up.',
+  ask:'How do I want to show up in the world this season?'},
+ MC:{what:'your Midheaven: your calling, career and public direction',nouns:['calling','career','reputation','ambition'],
+  chart:'Your Midheaven is in Aries, so your calling asks for courage, initiative and independence. Transits here often line up with shifts at work or in your sense of direction.',
+  ask:'What would I do with my working life if I trusted my courage?'},
+ Mercury:{what:'your Mercury: how you think, speak, learn and make plans',nouns:['thinking','communication','learning','planning'],
+  chart:'Your Mercury is in Sagittarius in your 6th house, retrograde at birth and trine Jupiter within half a degree. You have a big-picture mind that loves meaning, philosophy and teaching, and you process deeply before you speak. You think best about the things that matter to you.',
+  ask:'What idea keeps coming back to me, and what would it take to give it form?'},
+ Venus:{what:'your Venus: how you love, what you find beautiful and what you value',nouns:['love','pleasure','beauty','values'],
+  chart:'Your Venus is in Scorpio in your 5th house. You love deeply, loyally and all-in, and your creativity, romance and play run on real intimacy. Transits to Venus tend to touch your relationship with Matt, your creative life and your sense of worth.',
+  ask:'What is beautiful in my life right now that I haven\'t fully let myself enjoy?'},
+ Mars:{what:'your Mars: your drive, courage, desire and how you take action',nouns:['drive','desire','action','courage'],
+  chart:'Your Mars is in late Sagittarius in your 6th house, trine your Moon. It\'s adventurous, freedom-loving energy that works best with purpose, movement and a horizon to aim at, and you act from feeling.',
+  ask:'What am I ready to go after, and what is holding me back?'},
+ Jupiter:{what:'your Jupiter: your faith, generosity, luck and where you grow',nouns:['faith','generosity','growth','abundance'],
+  chart:'Your Jupiter is in Leo in your 2nd house, retrograde at birth and trine your Mercury. It gives you big-hearted, creative generosity, and luck that grows through your self-worth, values and gifts.',
+  ask:'Where am I being called to grow, and what am I grateful for?'},
+ Saturn:{what:'your Saturn: your discipline, responsibilities and long-term structures',nouns:['discipline','responsibility','craft','commitments'],
+  chart:'Your Saturn is in Virgo in your 3rd house: careful, precise thinking and a craftsperson\'s patience with words, learning and everyday skills. Your inner critic can live here too.',
+  ask:'What am I building slowly, and where can I be kinder to myself about it?'},
+ Uranus:{what:'your Uranus: your inner rebel, originality and need for freedom',nouns:['originality','freedom','intuition','change'],
+  chart:'Your Uranus is in Scorpio in your 5th house: original, intense creativity and a need for freedom in love and self-expression.',
+  ask:'Where do I need more freedom to be myself?'},
+ Neptune:{what:'your Neptune: your spirituality, imagination and compassion',nouns:['imagination','spirituality','compassion','dreams'],
+  chart:'Your Neptune is in Sagittarius in your 6th house, within half a degree of your Sun. Spirituality and imagination are woven into your core self, so whatever touches your Neptune also touches your Sun.',
+  ask:'What is my intuition telling me that I have been reluctant to hear?'},
+ Pluto:{what:'your Pluto: your deep power, and where you transform',nouns:['power','depth','healing','transformation'],
+  chart:'Your Pluto is in Libra in your 4th house: deep transformation through home, family, roots and close relationships. You are a powerful healer of family patterns.',
+  ask:'What old pattern am I ready to let go of for good?'},
+ Node:{what:'your North Node: your growth edge and soul direction',nouns:['purpose','devotion','learning','service'],
+  chart:'Your North Node is in Virgo in your 3rd house. You grow through practical learning, careful communication, humble daily devotion and your local community, turning big Sagittarian visions into grounded, useful steps.',
+  ask:'What small, practical step would move me toward the life I am growing into?'}
+};
+var ASPX={
+ conjunct:{what:'A conjunction (0°) fuses two energies into one. It is the most intense contact, for better or worse, and it often begins a new chapter for this part of you.',verb:'lands right on'},
+ sextile:{what:'A sextile (60°) is an opportunity aspect. It\'s friendly and supportive, but it only pays off if you act on it.',verb:'opens a door for'},
+ square:{what:'A square (90°) creates friction that demands action. It\'s uncomfortable, but it is the classic aspect of growth through challenge.',verb:'challenges'},
+ trine:{what:'A trine (120°) is the most harmonious aspect. Energy flows easily between the two, bringing ease and natural talent. It\'s easy to take for granted, so use it on purpose.',verb:'supports'},
+ opposite:{what:'An opposition (180°) brings awareness through contrast, often through other people. It is a balancing act between two sides of you.',verb:'faces'}
+};
+var RULES={Mars:[0],Venus:[1,6],Mercury:[2,5],Moon:[3],Sun:[4],Pluto:[7],Jupiter:[8],Saturn:[9],Uranus:[10],Neptune:[11]};
+var ELEMN=['fire','earth','air','water'];
+function houseOf(lon){ return ((sgn(lon)-3)%12+12)%12; }
+function isSoft(x){ return x.A.n==='conjunct' ? !/Mars|Saturn|Uranus|Neptune|Pluto/.test(x.t) : !!x.A.soft; }
+function aspOrbAt(x,date){ return Math.abs(sep(positions(date)[x.t],NATAL[x.n])-x.A.a); }
+function aspTimeline(x){
+  var H=3600000, D=86400000, c={Moon:[2*D,H],Sun:[20*D,6*H],Mercury:[120*D,12*H],Venus:[120*D,12*H],Mars:[240*D,D]}[x.t]||(/Jupiter|Saturn/.test(x.t)?[500*D,D]:[800*D,2*D]);
+  var span=c[0], step=c[1], max=(x.t==='Moon')?2.5:(x.t==='Sun'?3:3.5), now=NOW.getTime();
+  var s=now, e=now, startOpen=false, endOpen=false;
+  while(true){ var t=s-step; if(now-t>span){ startOpen=true; break; } if(aspOrbAt(x,new Date(t))>max) break; s=t; }
+  while(true){ var t2=e+step; if(t2-now>span){ endOpen=true; break; } if(aspOrbAt(x,new Date(t2))>max) break; e=t2; }
+  var ts=[], fs=[];
+  for(var t3=s-step; t3<=e+step; t3+=step){ ts.push(t3); fs.push(aspOrbAt(x,new Date(t3))); }
+  var peaks=[], strong=[], inS=null;
+  for(var i=1;i<ts.length-1;i++){
+    if(fs[i]<=fs[i-1] && fs[i]<fs[i+1]){
+      var a=ts[i-1], b=ts[i+1];
+      for(var k=0;k<40;k++){ var m1=a+(b-a)/3, m2=b-(b-a)/3; if(aspOrbAt(x,new Date(m1))<aspOrbAt(x,new Date(m2))) b=m2; else a=m1; }
+      var tp=(a+b)/2; peaks.push({t:tp,orb:aspOrbAt(x,new Date(tp))});
+    }
+  }
+  for(var j=0;j<ts.length;j++){
+    if(fs[j]<=1 && inS===null) inS=ts[j];
+    if((fs[j]>1 || j===ts.length-1) && inS!==null){ strong.push([inS,ts[fs[j]>1?j-1:j]]); inS=null; }
+  }
+  return {s:s,e:e,startOpen:startOpen,endOpen:endOpen,peaks:peaks,strong:strong,fast:x.t==='Moon'};
+}
+function fmtT(t,fast){
+  var d=new Date(t);
+  if(fast) return d.toLocaleDateString(undefined,{weekday:'short'})+' '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+}
+function fmtRange(a,b,fast){
+  if(!fast){ var da=new Date(a), db=new Date(b);
+    if(da.getFullYear()===db.getFullYear()) return da.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' – '+fmtT(b); }
+  return fmtT(a,fast)+' – '+fmtT(b,fast);
+}
+function timingHTML(x){
+  var tl=aspTimeline(x), now=NOW.getTime(), f=tl.fast, out=[];
+  out.push('<b>Active window:</b> '+(tl.startOpen?'since before '+fmtT(tl.s,f):fmtT(tl.s,f))+' – '+(tl.endOpen?'beyond '+fmtT(tl.e,f):fmtT(tl.e,f))+'.');
+  var ex=tl.peaks.filter(function(p){return p.orb<0.1;});
+  if(ex.length){
+    var parts=ex.map(function(p){ return fmtT(p.t,f)+(p.t<now?' (passed)':''); });
+    out.push('<b>Exact:</b> '+parts.join(' · ')+(ex.length>1?' — this transit makes '+ex.length+' passes, because of retrograde motion.':'.'));
+  } else if(tl.peaks.length){
+    var p=tl.peaks.reduce(function(a,b){return a.orb<b.orb?a:b;});
+    out.push('<b>Closest approach:</b> '+forb(p.orb)+' on '+fmtT(p.t,f)+'. The planet turns around before reaching exact, so it hovers rather than peaks.');
+  }
+  if(tl.strong.length && !f) out.push('<b>Strongest (within 1°):</b> '+tl.strong.map(function(r){return fmtRange(r[0],r[1],f);}).join(' · ')+'.');
+  out.push('<span class="mute">Typical length for '+x.t+' transits: '+TP[x.t].dur+'. Dates are approximate, to within a day or so.</span>');
+  return out.map(function(l){return '<p>'+l+'</p>';}).join('');
+}
+function aspectBody(x){
+  var tp=TP[x.t], np=NP[x.n], ax=ASPX[x.A.n], soft=isSoft(x), adj=soft?tp.adjS:tp.adjH;
+  var ts=sgn(SKY[x.t]), ns=sgn(NATAL[x.n]), th=houseOf(SKY[x.t]);
+  var think=np.nouns.map(function(n,i){return adj[i]+' '+n;}).join(', ');
+  var elem='';
+  if(ts%4===ns%4) elem=' Both points are in '+ELEMN[ts%4]+' signs ('+SIGNS[ts]+' and '+SIGNS[ns]+'), so the energies speak the same language.';
+  else if(x.A.n==='sextile'||x.A.n==='opposite') elem=' '+SIGNS[ts]+' and '+SIGNS[ns]+' are complementary signs ('+ELEMN[ts%4]+' and '+ELEMN[ns%4]+'), so they feed each other.';
+  var rules=(RULES[x.n]||[]).map(function(si){var h=((si-3)%12+12)%12; return 'your '+ord(h+1)+' house of '+HOUSE[h];});
+  var ruleTxt=rules.length?' '+NNAME[x.n]+' also rules '+rules.join(' and ')+', so the effects can spill into '+(rules.length>1?'those areas':'that area')+'.':'';
+  var phase = x.t==='Moon' ? 'The Moon moves fast, so this is a brief emotional note rather than a theme.' :
+    (x.app ? 'It is <b>applying</b> (building toward exact), so you may feel it growing stronger.' : 'It is <b>separating</b> (past its peak), so this is more about integrating what it stirred up than about new events.');
+  var cr=PCRYS[x.t][soft?0:1];
+  var h=[];
+  h.push('<h4>What it means</h4><p>Transiting '+tp.role+', '+ax.verb+' '+np.what+'. '+ax.what+elem+'</p>');
+  h.push('<p><i class="c-gold">The flavor:</i> '+think+'.</p>');
+  h.push('<h4>In your chart</h4><p>'+np.chart+ruleTxt+'</p><p>'+x.t+' is moving through '+SIGNS[ts]+', your '+ord(th+1)+' house of '+HOUSE[th]+', so that area of life is often where the trigger comes from.</p>');
+  h.push('<h4>How it may feel</h4><p>'+(soft?tp.feelS:tp.feelH)+' '+phase+'</p>');
+  if(RETRO[x.t] && tp.retro) h.push('<h4>Because it\'s retrograde</h4><p>'+tp.retro+'</p>');
+  h.push('<h4>Timing</h4>'+timingHTML(x));
+  h.push('<h4>Working with it</h4><p>'+(soft?tp.doS:tp.doH)+'</p><p class="journal">“'+esc(np.ask)+'”</p>');
+  h.push('<h4>Crystal ally</h4>'+crystalHTML(cr,CR[cr][1]));
+  return h.join('');
+}
 function renderSky(){
-  var mp=moonPhase(), rows=TRANSITS.slice(0,8).map(function(x){
-    return '<div class="asp"><span class="g glyph c-'+(x.A.soft?'aqua':'coral')+'">'+PG[x.t]+x.A.g+PG[x.n]+'</span><span class="d">'+x.t+(RETRO[x.t]?' ℞':'')+' '+x.A.n+' your '+NNAME[x.n]+'<br><span class="mute small">'+pos(SKY[x.t])+' → natal '+pos(NATAL[x.n])+'</span></span><span class="o">'+forb(x.orb)+'<br>'+(x.t==='Moon'?'passing':(x.app?'applying':'separating'))+'</span></div>';
+  var mp=moonPhase(), rows=TRANSITS.slice(0,8).map(function(x,i){
+    return '<details class="asp-d"><summary class="asp" data-a="asp" data-i="'+i+'"><span class="g glyph c-'+(x.A.soft?'aqua':'coral')+'">'+PG[x.t]+x.A.g+PG[x.n]+'</span><span class="d">'+x.t+(RETRO[x.t]?' ℞':'')+' '+x.A.n+' your '+NNAME[x.n]+'<br><span class="mute small">'+pos(SKY[x.t])+' → natal '+pos(NATAL[x.n])+'</span></span><span class="o">'+forb(x.orb)+'<br>'+(x.t==='Moon'?'passing':(x.app?'applying':'separating'))+'</span></summary><div class="asp-body"></div></details>';
   }).join('');
   var where=['Sun','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'].map(function(p){return '<span style="white-space:nowrap"><span class="glyph">'+PG[p]+'</span> '+SIGNS[sgn(SKY[p])]+' '+Math.floor(SKY[p]%30)+'°'+(RETRO[p]?' ℞':'')+'</span>';}).join(' · ');
   $('sky').innerHTML='<header><h2>Current sky</h2><span style="font-size:30px">'+mp.icon+'</span></header>'+
     '<p><b style="font-weight:600">'+mp.name+'</b> in '+pos(SKY.Moon)+' · '+mp.illum+'% illuminated<br><span class="mute">'+mp.tip+'</span></p>'+
-    '<div class="eyebrow" style="margin-top:14px">Tightest transits to your chart</div>'+(rows||'<div class="empty">No close aspects at the moment — open sky.</div>')+
+    '<div class="eyebrow" style="margin-top:14px">Tightest transits to your chart</div><p class="small mute" style="margin:4px 0 2px">Tap any aspect to see what it means for you.</p>'+(rows||'<div class="empty">No close aspects at the moment — open sky.</div>')+
     '<div class="eyebrow" style="margin-top:14px">Where everything is</div><p class="small mute" style="margin-top:6px;line-height:1.9">'+where+'</p>';
 }
 
@@ -737,6 +942,7 @@ document.addEventListener('click',function(e){
     case 'plant-add': var pi=$('plants').querySelector('form[data-f=plant] input'); if(!addPlant(pi.value,+v)) pi.focus(); break;
     case 'plant-manage': plantManage=!plantManage; renderPlants(); break;
     case 'plant-remove': S.customPlants=S.customPlants.filter(function(x){return x.n!==v;}); S.plants.items=S.plants.items.filter(function(x){return x!==v;}); if(!S.customPlants.length) plantManage=false; save(); renderPlants(); renderSunday(); break;
+    case 'asp': var ab=el.parentNode.querySelector('.asp-body'), ax=TRANSITS[+el.getAttribute('data-i')]; if(ab && ax && !ab.innerHTML){ try{ ab.innerHTML=aspectBody(ax); }catch(err){ ab.innerHTML='<p class="mute">Couldn\'t build this reading.</p>'; } } break;
     case 'habit-edit': habitEdit=!habitEdit; renderHabits(); break;
     case 'habit-del': removeId(S.habits,id); save(); renderHabits(); break;
     case 'tab': S.tab=v; save(); renderTasks(); break;
